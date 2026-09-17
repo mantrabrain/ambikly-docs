@@ -1,4 +1,4 @@
-name: Deploy Ambikly Documentation
+name: Build Ambikly Documentation
 
 on:
   push:
@@ -7,14 +7,11 @@ on:
     branches: [main, master]
   workflow_dispatch:
 
+# Build-only: this repository is private, so GitHub Pages is not used.
+# Netlify publishes the site (see netlify.toml). This job just fails the
+# build on a broken link or a bad page before it reaches Netlify.
 permissions:
   contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: false
 
 jobs:
   build:
@@ -37,25 +34,3 @@ jobs:
       # the build instead of shipping a 404 into the docs.
       - name: Build documentation
         run: npm run build
-
-      - name: Setup Pages
-        if: github.event_name != 'pull_request'
-        uses: actions/configure-pages@v5
-
-      - name: Upload artifact
-        if: github.event_name != 'pull_request'
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: docs/.vitepress/dist
-
-  deploy:
-    if: github.event_name != 'pull_request'
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4

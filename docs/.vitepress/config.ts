@@ -241,10 +241,6 @@ export default defineConfig({
       copyright: `© ${new Date().getFullYear()} Ambikly`,
     },
 
-    editLink: {
-      pattern: 'https://github.com/mantrabrain/ambikly-docs/edit/main/docs/:path',
-      text: 'Edit this page on GitHub',
-    },
 
     lastUpdated: {
       text: 'Last updated',
@@ -256,11 +252,6 @@ export default defineConfig({
     outline: { level: [2, 3], label: 'On this page' },
 
     docFooter: { prev: 'Previous', next: 'Next' },
-
-    // Read by the "Copy page" / "View as Markdown" buttons (theme/components).
-    markdownSource: {
-      pattern: 'https://raw.githubusercontent.com/mantrabrain/ambikly-docs/main/docs/:path',
-    },
   },
 
   markdown: {

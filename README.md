@@ -34,7 +34,7 @@ ambikly-docs/
 │   ├── .vitepress/
 │   │   ├── config.ts          # site config, nav, sidebar, SEO — single source of navigation
 │   │   ├── addons.data.mjs    # add-on sidebar entries, read from data/addons.json
-│   │   └── theme/             # brand tokens, doc components, "Copy page" action
+│   │   └── theme/             # brand tokens and documentation components
 │   ├── public/                # favicons, og-image, robots.txt, llms.txt (generated)
 │   ├── addons/                # GENERATED — do not edit by hand
 │   ├── developers/            # developer reference
@@ -109,15 +109,24 @@ overwrites them.** To change an add-on page, change `data/addons.json` (or the g
 - `/llms.txt` — an index of every page with its description, in the llmstxt.org format
 - `/llms-full.txt` — the entire documentation as one plain-text file
 
-`public/robots.txt` allows the answer-engine crawlers by name, and every page carries a
-**Copy page** / **View as Markdown** action so a reader can hand a page to a model directly.
+`public/robots.txt` allows the answer-engine crawlers by name. Point a model at `/llms-full.txt`
+to give it the entire manual in one fetch.
 
 ## Deploying
 
-Pushing to `main` builds and publishes via `.github/workflows/deploy.yml` (GitHub Pages).
-`netlify.toml` is included for a Netlify deploy of the same build — use one or the other, not both.
+This repository is **private**, so GitHub Pages is not the deploy target (Pages on a private repo
+requires a paid plan). Deploy with **Netlify**, which builds private repos on the free tier:
 
-Point `docs.ambikly.com` at whichever target you keep.
+1. In Netlify, *Add new site → Import an existing project* and pick this repository.
+2. Netlify reads `netlify.toml`: build `npm run build`, publish `docs/.vitepress/dist`.
+3. Under *Domain management*, add `docs.ambikly.com` and follow the DNS instructions.
+
+`.github/workflows/deploy.yml` is kept but only runs the build as a CI check — it will not publish
+unless the repository is made public and Pages is enabled.
+
+Because the repo is private, the *Edit this page on GitHub* link and the *Copy page / View as
+Markdown* buttons are disabled — both fetch from a public raw URL. Re-enable them in
+`docs/.vitepress/config.ts` (`editLink`, `markdownSource`) if the repo is ever made public.
 
 ## License
 

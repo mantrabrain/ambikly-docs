@@ -1,13 +1,11 @@
 import type { Theme } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import { nextTick } from 'vue'
-import Layout from './Layout.vue'
 import './style.css'
 import './custom.css'
 
 export default {
   extends: DefaultTheme,
-  Layout,
   enhanceApp({ router }) {
     if (typeof window === 'undefined') return // SSR guard
 
