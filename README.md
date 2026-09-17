@@ -15,7 +15,7 @@ npm run dev        # http://localhost:5175
 | Script | What it does |
 | --- | --- |
 | `npm run dev` | Local dev server with hot reload |
-| `npm run build` | Regenerates add-on pages and llms.txt, then builds to `docs/.vitepress/dist` |
+| `npm run build` | Regenerates add-on pages and llms.txt, builds to `docs/.vitepress/dist`, then writes the CSP header |
 | `npm run preview` | Serves the production build locally |
 | `npm run addons` | Regenerates the 35 add-on pages from `data/addons.json` |
 | `npm run llms` | Regenerates `docs/public/llms.txt` and `llms-full.txt` |
@@ -29,6 +29,7 @@ ambikly-docs/
 ├── scripts/
 │   ├── generate-addons.mjs    # data/addons.json → docs/addons/*.md (+ index)
 │   ├── generate-llms.mjs      # all pages → public/llms.txt + llms-full.txt
+│   ├── csp.mjs                # post-build: dist/_headers with a hash-based Content-Security-Policy
 │   └── check-links.mjs        # internal link + anchor validator
 ├── docs/
 │   ├── .vitepress/
@@ -120,6 +121,20 @@ requires a paid plan). Deploy with **Netlify**, which builds private repos on th
 1. In Netlify, *Add new site → Import an existing project* and pick this repository.
 2. Netlify reads `netlify.toml`: build `npm run build`, publish `docs/.vitepress/dist`.
 3. Under *Domain management*, add `docs.ambikly.com` and follow the DNS instructions.
+4. Under *Project configuration → General → Powered by Netlify badge*, turn the badge **off**.
+   Netlify switches it on for every new Free-plan project; turning it off is free.
+
+### About the "Powered by Netlify" badge
+
+Netlify injects `<script async src="/.netlify/scripts/hud">` into every page of a Free-plan project
+at the edge — it is not in this repository's output. Two things keep it off the live site:
+
+- The **UI toggle** above is the supported way and should be done once per project.
+- As a repo-level safety net, `scripts/csp.mjs` runs after every build and writes `dist/_headers`
+  with a `Content-Security-Policy` whose `script-src` allow-lists the four VitePress inline scripts
+  by SHA-256 hash and omits `'unsafe-inline'`. Netlify documents that the badge cannot render under
+  such a policy. The hashes are computed from the built HTML because the route hash map changes on
+  every build. If you add an inline `<script>` to the theme, the build picks it up automatically.
 
 `.github/workflows/deploy.yml` is kept but only runs the build as a CI check — it will not publish
 unless the repository is made public and Pages is enabled.
