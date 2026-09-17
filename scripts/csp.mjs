@@ -47,15 +47,24 @@ for (const file of walk(dist)) {
   }
 }
 
+// docs.ambikly.com is proxied through Cloudflare, whose zone-wide Web
+// Analytics injects <script src="https://static.cloudflareinsights.com/beacon.min.js">
+// into browser responses (configured by a data-cf-beacon attribute — no inline
+// code, so no hash needed). The beacon reports to cloudflareinsights.com.
+// Allow-listing a host does not reopen the door to the badge: that needs
+// 'unsafe-inline'.
+const CF_BEACON = 'https://static.cloudflareinsights.com'
+const CF_RUM = 'https://cloudflareinsights.com'
+
 const csp = [
   "default-src 'self'",
   // No 'unsafe-inline': that is the line that keeps the Netlify badge out.
-  `script-src 'self' ${[...hashes].sort().join(' ')}`,
+  `script-src 'self' ${CF_BEACON} ${[...hashes].sort().join(' ')}`,
   // VitePress and medium-zoom set inline styles at runtime.
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com data:",
   "img-src 'self' data: https:",
-  "connect-src 'self'",
+  `connect-src 'self' ${CF_RUM}`,
   "frame-ancestors 'self'",
   "object-src 'none'",
   "base-uri 'self'",
