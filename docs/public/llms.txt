@@ -1,0 +1,111 @@
+# Ambikly Documentation
+
+> Official documentation for Ambikly, a WordPress eCommerce plugin. The free core sells physical
+> products, digital downloads and variable products from one product table, one cart and one admin,
+> with Stripe, PayPal and five offline payment methods, coupons, tax, shipping zones, customer
+> accounts, invoices, a REST API, webhooks and WP-CLI. Ambikly Pro adds 35 add-ons on one license.
+> Self-hosted on your own WordPress site. No transaction fees on any plan.
+
+Documentation site: https://docs.ambikly.com
+Product site: https://ambikly.com
+Free plugin: https://wordpress.org/plugins/ambikly/
+Full plain-text documentation: https://docs.ambikly.com/llms-full.txt
+
+## Guide
+
+- [Introduction](https://docs.ambikly.com/): Ambikly is a self-hosted WordPress eCommerce plugin for physical and digital products. Start here for installation, setup, and the full reference.
+- [A tour of the admin](https://docs.ambikly.com/admin-tour): A map of every screen in the Ambikly admin — the sidebar groups, the header toolbar, each Settings tab, and where the Tools screen hides.
+- [B2B companies & Net Terms](https://docs.ambikly.com/b2b-companies): Company accounts, credit limits, buyers and the "Bill my company" checkout option — how credit is reserved atomically, how terms set due dates, and how to record an invoice payment.
+- [Blocks & store pages](https://docs.ambikly.com/blocks): The eight Ambikly Gutenberg blocks, every attribute with its type and default, what each one renders, and why they are server-rendered with no block-editor UI.
+- [Cart & checkout](https://docs.ambikly.com/cart-checkout): How the Ambikly cart is stored and scoped, what checkout validates before payment, guest versus logged-in checkout, and the order that is created.
+- [Categories, tags & brands](https://docs.ambikly.com/categories): How Ambikly organizes a catalog — hierarchical categories in their own table, the tag and brand taxonomies, assigning terms, and how each surfaces on the storefront.
+- [Changelog](https://docs.ambikly.com/changelog): Current Ambikly and Ambikly Pro versions, requirements, the versioning policy, how updates reach a site, how the database migrates, and a safe update order.
+- [Coupons](https://docs.ambikly.com/coupons): Create and manage Ambikly discount codes — the three discount types, every restriction and usage-limit field, how limits are enforced, and checkout failure messages.
+- [Customers](https://docs.ambikly.com/customers): The Customers screen and customer record, saved addresses and the default-address rule, the storefront account area tab by tab, and how records link to WordPress users.
+- [Digital downloads](https://docs.ambikly.com/digital-downloads): Sell files with Ambikly — shared files and pricing plans, download limits and expiry, the tokenized download endpoint, the customer Downloads tab and IP logging.
+- [Emails](https://docs.ambikly.com/emails): The Emails screen, the four transactional emails Ambikly sends, the complete smart-tag table, every option key, deliverability notes, and how to preview and test.
+- [FAQ](https://docs.ambikly.com/faq): Straight answers to the questions Ambikly store owners and developers actually ask — what works, what does not yet, and where each feature is documented in full.
+- [Your first order](https://docs.ambikly.com/first-order): Place a test order through your own storefront using an offline payment method, verify the order, emails, invoice, stock and downloads, then refund or cancel it.
+- [Your first product](https://docs.ambikly.com/first-product): Create one simple physical product and one digital product in Ambikly, covering only the fields that are actually required to publish each one.
+- [Go-live checklist](https://docs.ambikly.com/go-live): Everything to verify before your Ambikly store takes real money — HTTPS, permalinks, live gateway credentials, tax, shipping, emails, backups, and the PayPal sandbox trap.
+- [Import & export (CSV)](https://docs.ambikly.com/import-export): The Ambikly Tools screen — product and order CSV exports, the product importer, the full column reference, error reporting and the WP-CLI equivalents.
+- [Installation](https://docs.ambikly.com/installation): Requirements, three ways to install Ambikly, what activation creates, how to add Ambikly Pro, and exactly what deactivating or deleting the plugin removes.
+- [Inventory & stock](https://docs.ambikly.com/inventory): How Ambikly tracks stock — managed and unmanaged products, stock status, thresholds, the atomic decrement that prevents overselling, and the low-stock alerts.
+- [Invoices & packing slips](https://docs.ambikly.com/invoices): How Ambikly generates invoices and packing slips, the token-guarded URLs, who can view them, PDF output, and the filters and actions for customizing both documents.
+- [Orders](https://docs.ambikly.com/orders): The Orders screen, every order and payment status with its exact slug, the order detail view section by section, what a status change triggers, and order notes.
+- [Payments overview](https://docs.ambikly.com/payments): All seven Ambikly payment gateways compared, how to enable and configure one, how credentials are masked, and why a subscription cart only offers Stripe.
+- [Offline payment methods](https://docs.ambikly.com/payments-offline): Cash on delivery, bank transfer, check, manual payment and company net terms — what each is for, its settings, and the order status it produces.
+- [PayPal](https://docs.ambikly.com/payments-paypal): Configure PayPal in Ambikly — the sandbox-by-default limitation you must fix first, credentials, the Orders v2 flow, the return URL, webhooks and refunds.
+- [Stripe](https://docs.ambikly.com/payments-stripe): Configure Stripe in Ambikly — API keys, the Checkout Session redirect, the signed webhook that confirms the order, refunds, saved cards, and common failures.
+- [What Pro adds](https://docs.ambikly.com/pro): Ambikly Pro is a second plugin that runs beside the free core with 35 add-ons on one license. The free-versus-Pro boundary, pricing, and exactly what a lapsed license does.
+- [Install & activate a license](https://docs.ambikly.com/pro-install): Install Ambikly Pro beside the free core, activate your license key, understand each license state, and fix activation problems and paused add-ons.
+- [Products](https://docs.ambikly.com/products): The Ambikly Products screen and the full product editor — every list column, filter, bulk action, tab and field, plus what each one stores and what it does not.
+- [Refunds & cancellations](https://docs.ambikly.com/refunds): Full and partial refunds, which gateways return money, what happens to stock and customer totals, recording a net-terms invoice payment, and when cancelling restores stock.
+- [Reports](https://docs.ambikly.com/reports): The four built-in reports — summary, sales by day, top products and status breakdown — what each measures, how date ranges work, and which statuses are excluded from revenue.
+- [Reviews](https://docs.ambikly.com/reviews): Moderating product reviews in Ambikly — the Reviews screen, the auto-approve rule, verified-purchase detection, the storefront form and the public REST routes.
+- [Roles & permissions](https://docs.ambikly.com/roles): Ambikly's two capabilities and two roles, exactly what Store Manager and Support Agent can reach, what stays Administrator-only, and how to assign a role.
+- [Settings reference](https://docs.ambikly.com/settings): Every tab and every field on the Ambikly Settings screen, with its storage key, default and effect — including the areas that are present in the UI but not yet wired up.
+- [Setup wizard](https://docs.ambikly.com/setup-wizard): Every step of the Ambikly setup wizard, the exact fields on each, what each one writes to the database, and how to configure the same things later from Settings.
+- [Shipping](https://docs.ambikly.com/shipping): Ambikly shipping zones, regions and the three method types — how a zone is matched to an address, how each method's cost is computed, and what has no admin field.
+- [Shortcodes](https://docs.ambikly.com/shortcodes): All eight Ambikly shortcodes with every attribute and default, the shop query strings for sorting, paging and filtering, and the AmbiklyStore bootstrap object.
+- [Store pages](https://docs.ambikly.com/store-pages): The five pages Ambikly creates, the shortcodes on them, how slugs are recorded, why you sometimes get shop-2, and how to move or rename a store page safely.
+- [Support](https://docs.ambikly.com/support): Where to get help with Ambikly, what to include so the first reply is useful, how to report a security issue privately, the refund policy, and what support covers.
+- [System status](https://docs.ambikly.com/system-status): Where to find Ambikly's system status report, what every field in it means, what a bad value looks like, and what to send with a support request.
+- [Tax](https://docs.ambikly.com/tax): Enable taxes in Ambikly, configure rate rows, and understand exactly how country, state, postcode, priority and compound rates are matched and applied.
+- [Themes & template overrides](https://docs.ambikly.com/themes): What Ambikly can and cannot be overridden with. Three email templates support theme overrides; storefront markup is inline and customizable through CSS and filters only.
+- [Troubleshooting](https://docs.ambikly.com/troubleshooting): Symptom-first fixes for the problems Ambikly stores actually hit — blank store pages, REST 404s, pending card orders, PayPal sandbox, missing emails, tax, shipping, jobs and webhooks.
+- [Variations](https://docs.ambikly.com/variations): Build a variable product in Ambikly — attributes and values, generating combinations, per-variant price, SKU and stock, and how the storefront resolves a choice.
+
+## Developer reference
+
+- [Developer overview](https://docs.ambikly.com/developers/): How to extend Ambikly — the REST API, hooks and filters, webhooks, WP-CLI, the Pro Addon SDK, custom payment gateways and the durable job queue.
+- [Addon SDK](https://docs.ambikly.com/developers/addon-sdk): The Ambikly Pro Addon base class, its settings schema and coercion rules, discovery and registration through ambikly_pro_addons, the license gate, and the shared durable job queue.
+- [Database schema](https://docs.ambikly.com/developers/database): Ambikly's custom tables across its two schema owners, the migration mechanism and the shared version option, teardown on uninstall, and how to query store data safely with $wpdb.
+- [Endpoint reference](https://docs.ambikly.com/developers/endpoints): Every REST route in the ambikly/v1 and ambikly-pro/v1 namespaces, grouped by resource, with the permission each one requires and the publicly accessible routes listed separately.
+- [Hooks & filters](https://docs.ambikly.com/developers/hooks): Every ambikly_ action and filter in the Ambikly free core with its arguments and where it fires, plus the two dynamic patterns and the hooks the plugin documents but does not actually emit.
+- [Payment gateway API](https://docs.ambikly.com/developers/payment-gateways): The PaymentGateway abstract class, the PaymentResult shape and its four factories, registering a gateway through ambikly_payment_gateways, and a complete working custom gateway.
+- [REST API](https://docs.ambikly.com/developers/rest-api): Authentication, permission callbacks, the response envelope, body-only pagination, query parameters and error codes for Ambikly's two REST namespaces.
+- [Template overrides](https://docs.ambikly.com/developers/templates): How ambikly_locate_template and ambikly_get_template resolve files, the three overridable email templates, and why the storefront, invoice and packing slip are customized differently.
+- [Webhooks](https://docs.ambikly.com/developers/webhooks): Ambikly's nine outbound webhook events, the signed JSON envelope, HMAC-SHA256 signature verification in PHP and Node, and the retry, timeout and log-retention behavior.
+- [WP-CLI](https://docs.ambikly.com/developers/wp-cli): Ambikly's three WP-CLI commands — upgrade-db, export and recompute — with every flag, which subcommand each applies to, and real examples.
+
+## Add-on reference
+
+- [Managing add-ons](https://docs.ambikly.com/addons-manage): The Add-ons screen — enabling and disabling add-ons, what each action actually does, per-add-on settings, how secrets are masked, and the license gate.
+- [All add-ons](https://docs.ambikly.com/addons/): Every Ambikly Pro add-on, grouped by what it does. All 35 are included in one license — enable any of them from Ambikly → Add-ons.
+- [Abandoned Cart Recovery](https://docs.ambikly.com/addons/abandoned-cart): Automatically emails shoppers who left items in their cart, with a one-click link back to it. A 15-minute scan looks at the store's own carts table for carts with items, a…
+- [Advanced Reports](https://docs.ambikly.com/addons/advanced-reports): Cohort retention, RFM segmentation, top customers and CSV exports from your order history. Four read-only reports computed directly from your orders and customers — no new…
+- [Advanced Shipping](https://docs.ambikly.com/addons/advanced-shipping): Conditional shipping rules driven by cart subtotal, weight, destination or contents. A rule engine that plugs into the core shipping-rates filter: the first matching rule…
+- [Advanced Variations](https://docs.ambikly.com/addons/advanced-variations): Renders product variation options as color chips, image thumbnails or text buttons. Stores one swatch per attribute term in its own ambikly_attribute_swatches table, keyed on…
+- [Affiliate System](https://docs.ambikly.com/addons/affiliate): Tracks ?ref= referrals with a cookie window and records a commission on every qualifying order. Captures a referral code from the URL into a cookie and a de-duplicated visit…
+- [AI Product Descriptions](https://docs.ambikly.com/addons/ai-descriptions): Generates a draft tagline and long description from a product name and a few feature bullets. One admin action builds a prompt from the product name, optional bullets and a…
+- [Frequently Bought Together](https://docs.ambikly.com/addons/ai-recommendations): “Customers who bought this also bought” companions from real purchase co-occurrence. A scheduled job builds a pairs table from your own order history, keeps pairs above a…
+- [AJAX Filters](https://docs.ambikly.com/addons/ajax-filters): Sidebar facets that refresh the shop grid without a page reload. The [ambikly_filters] shortcode renders an aside with published-category checkboxes, minimum and maximum…
+- [Product Bundles](https://docs.ambikly.com/addons/bundles): Package several products under one SKU at a fixed or automatically computed price. Turns any product into a bundle with a stored composition, recomputing the bundle price…
+- [Checkout Field Editor](https://docs.ambikly.com/addons/checkout-field-editor): Define, relabel and reorder checkout fields as a schema — live checkout wiring lands in a coming release. Stores a checkout field schema as JSON in the add-on settings.
+- [Product Compare](https://docs.ambikly.com/addons/compare): Adds a compare button to product cards and a side-by-side comparison table. Adds an 'Add to Compare' button to shop-grid cards and the single product page through the…
+- [CRM Sync](https://docs.ambikly.com/addons/crm-sync): Pushes new customers, completed orders and captured leads to Mailchimp or HubSpot. Listens for registrations, paid orders and popup leads, logs every event to an audit table…
+- [Download Analytics](https://docs.ambikly.com/addons/download-analytics): Logs every digital download and reports counts, unique customers and daily trends. Listens to the core ambikly_download_served action and inserts a row into its own…
+- [Dynamic Pricing](https://docs.ambikly.com/addons/dynamic-pricing): Rule-based cart discounts — tiered, role-based, quantity, BOGO and scheduled. A rule engine over the cart totals: active, in-window, under-limit rules are evaluated against…
+- [Flash Sales](https://docs.ambikly.com/addons/flash-sales): Schedules a sale window per product and shows a live countdown until it ends. Stores a start and end window per product and hooks the core on-sale check, so the schedule…
+- [Gift Cards](https://docs.ambikly.com/addons/gift-cards): Sell stored-value gift cards and let customers redeem the balance at checkout. Flag a product as a gift card and every paid unit mints a uniquely coded card, optionally…
+- [Software Licensing Pro](https://docs.ambikly.com/addons/license-pro): Activation API, per-site seat enforcement and a license-gated update feed for software you sell. The runtime layer on top of the license keys the free core mints at purchase…
+- [Loyalty Points](https://docs.ambikly.com/addons/loyalty-points): Customers earn points on paid orders and redeem them as a cart discount. An append-only ledger makes every credit and debit auditable, with balances derived by walking…
+- [Multi-vendor](https://docs.ambikly.com/addons/multi-vendor): Vendor signups, per-vendor dashboards and recorded earnings on every sale they make. Vendors apply through a shortcode form, you approve, reject or suspend them, and each…
+- [One Page Checkout](https://docs.ambikly.com/addons/one-page-checkout): Combines cart, contact details, shipping and payment onto a single checkout page. The [ambikly_one_page_checkout] shortcode renders an empty shell that a small script fills…
+- [Order Bumps](https://docs.ambikly.com/addons/order-bumps): One-click add-on offers on the checkout page to lift average order value. Bump offers carry targeting conditions and an optional schedule; the eligible ones for the current…
+- [PDF Stamping](https://docs.ambikly.com/addons/pdf-stamping): Watermarks delivered PDFs with the buyer’s name and order number so leaks are traceable. When ambikly_order_paid fires, the add-on finds every product file on the order whose…
+- [Popup Campaigns](https://docs.ambikly.com/addons/popup-campaigns): One email-capture popup with delay, scroll or exit-intent triggers and an optional coupon reveal. A single configurable modal, driven by the trigger you choose and suppressed…
+- [Post-purchase Upsells](https://docs.ambikly.com/addons/post-purchase-upsells): A one-click add-on offer on the thank-you page, charged to the card already on file. When an order is paid, the first matching offer is cached with a single-use token and…
+- [Product Badges](https://docs.ambikly.com/addons/product-badges): Adds Sale, New, Hot and Sold out ribbons to product cards from a simple rules engine. Hooks the core ambikly_product_card_badges filter to append Sale, New, Hot and Sold out…
+- [Quick View](https://docs.ambikly.com/addons/quick-view): Opens a fast product preview modal from any shop page, with no page navigation. Adds a Quick view button to every shop-grid card through the ambikly_product_card_actions…
+- [Recently Viewed](https://docs.ambikly.com/addons/recently-viewed): Tracks and re-surfaces the products a visitor has already browsed. A tracker script runs on every storefront page.
+- [Shipment Tracking](https://docs.ambikly.com/addons/shipment-tracking): Adds tracking numbers to orders with carrier links and an automatic customer email. One order can carry several tracking entries for partial shipments, with six pre-seeded…
+- [Size Chart](https://docs.ambikly.com/addons/size-chart): Shows a per-category size guide in a modal, triggered from the product page. Charts are stored as a JSON array in the add-on settings; each has a name, an HTML table and an…
+- [Smart Search](https://docs.ambikly.com/addons/smart-search): Type-ahead product search with thumbnails, prices and matching category suggestions. A type-ahead search box delivered by the [ambikly_smart_search] shortcode or by adding…
+- [Social Login](https://docs.ambikly.com/addons/social-login): Single sign-on with Google and Facebook using the store’s own OAuth credentials. Continue-with buttons on the WordPress login form, the store login form and via shortcode.
+- [Sticky Add to Cart](https://docs.ambikly.com/addons/sticky-add-to-cart): Pins the Add to Cart button to the screen once the real one scrolls out of view. On the single-product route (?ambikly_product=slug) the add-on enqueues a small script and…
+- [Store Credit Wallet](https://docs.ambikly.com/addons/store-credit): A per-customer wallet for refunds, gift credit and goodwill, spendable at checkout. An append-only ledger per customer, with the balance as the running sum.
+- [Subscriptions](https://docs.ambikly.com/addons/subscriptions): Recurring billing for memberships and subscription boxes, self-managed from the account page. Any product with a billing period becomes a subscription: when the order is…
+- [Wishlist](https://docs.ambikly.com/addons/wishlist): Lets shoppers save favorites — works for guests and merges into their account on login. Adds a heart button to product cards and product pages through the card and detail…
+

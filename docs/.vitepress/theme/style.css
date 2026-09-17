@@ -1,0 +1,111 @@
+/* ============================================================
+ * Ambikly docs — brand tokens and VitePress overrides
+ *
+ * The palette matches ambikly.com: #F97316 for fills and accents,
+ * #C2410C for link text (4.9:1 on white, so body links pass AA).
+ * ============================================================ */
+
+:root {
+  --ak-orange: #f97316;
+  --ak-orange-2: #ea580c;
+  --ak-orange-3: #c2410c;
+  --ak-ink: #0f0f11;
+
+  --vp-c-brand-1: #c2410c;
+  --vp-c-brand-2: #ea580c;
+  --vp-c-brand-3: #f97316;
+  --vp-c-brand-soft: rgba(249, 115, 22, 0.14);
+
+  --vp-c-tip-1: var(--vp-c-brand-1);
+  --vp-c-tip-soft: var(--vp-c-brand-soft);
+
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(120deg, #f97316, #ea580c);
+
+  --vp-button-brand-bg: var(--ak-orange);
+  --vp-button-brand-hover-bg: var(--ak-orange-2);
+  --vp-button-brand-active-bg: var(--ak-orange-3);
+  --vp-button-brand-border: transparent;
+  --vp-button-brand-hover-border: transparent;
+
+  --vp-font-family-base: 'Hanken Grotesk', ui-sans-serif, system-ui, -apple-system,
+    'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --vp-font-family-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, 'SF Mono',
+    Menlo, Consolas, monospace;
+}
+
+.dark {
+  /* Lighter orange on dark: #C2410C does not carry enough contrast there. */
+  --vp-c-brand-1: #fb923c;
+  --vp-c-brand-2: #f97316;
+  --vp-c-brand-3: #ea580c;
+  --vp-c-brand-soft: rgba(249, 115, 22, 0.18);
+}
+
+/* The default theme sets link color from brand-1; keep underlines on
+   in-prose links so color is never the only signal. */
+.vp-doc p a,
+.vp-doc li a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+}
+.vp-doc p a:hover,
+.vp-doc li a:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* Tables: the reference pages (endpoints, hooks, settings) are table-heavy.
+   display:block + overflow-x lets a wide table scroll inside the content
+   column instead of widening the page, and the layered gradient fades at
+   the edges so it is visible that there is more to the right. */
+.vp-doc table {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 1.25rem 0;
+  font-size: 0.92rem;
+  background:
+    linear-gradient(to right, var(--vp-c-bg), var(--vp-c-bg)) 0 0,
+    linear-gradient(to right, var(--vp-c-bg), var(--vp-c-bg)) 100% 0,
+    linear-gradient(to right, rgba(0, 0, 0, 0.08), transparent) 0 0,
+    linear-gradient(to left, rgba(0, 0, 0, 0.08), transparent) 100% 0;
+  background-repeat: no-repeat;
+  background-size: 20px 100%, 20px 100%, 10px 100%, 10px 100%;
+  background-attachment: local, local, scroll, scroll;
+}
+.vp-doc th {
+  background: var(--vp-c-bg-soft);
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--vp-c-text-2);
+  white-space: nowrap;
+}
+.vp-doc td code {
+  white-space: nowrap;
+}
+
+/* Code blocks a shade tighter than default — the reference pages are long. */
+.vp-doc div[class*='language-'] {
+  border-radius: 10px;
+}
+
+/* Header logo: the Ambikly mark is a square tile, so give it room. */
+.VPNavBarTitle .logo {
+  height: 26px;
+  width: 26px;
+  border-radius: 7px;
+}
+
+@media (max-width: 640px) {
+  .vp-doc table {
+    font-size: 0.86rem;
+  }
+  .vp-doc th,
+  .vp-doc td {
+    padding: 8px 10px;
+  }
+}

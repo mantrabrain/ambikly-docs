@@ -1,0 +1,345 @@
+/* ============================================================
+ * Ambikly docs — shared documentation components
+ *
+ * These classes are used inline in markdown. Keep the vocabulary
+ * small so pages stay readable as plain markdown:
+ *
+ *   <span class="screen-path">Ambikly → Settings → Payments</span>
+ *   <span class="pro-pill">PRO</span>
+ *   <ol class="step-list"> … </ol>
+ *   <div class="ui-tip"> … </div>
+ *   <div class="pro-callout"> … </div>
+ *   <div class="ak-cards"><a class="ak-card" href="…"> … </a></div>
+ * ============================================================ */
+
+/* ---------- Admin path chip: "Ambikly → Settings → Payments" ---------- */
+.screen-path {
+  display: inline-block;
+  padding: 0.12em 0.5em;
+  font-size: 0.88em;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--vp-c-text-1);
+  background: var(--vp-c-default-soft);
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+/* ---------- Pro pill ---------- */
+.pro-pill {
+  display: inline-block;
+  padding: 0.1em 0.5em;
+  font-size: 0.7em;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  vertical-align: middle;
+  color: #fff;
+  background: linear-gradient(135deg, var(--ak-orange), var(--ak-orange-2));
+  border-radius: 999px;
+}
+.free-pill {
+  display: inline-block;
+  padding: 0.1em 0.5em;
+  font-size: 0.7em;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  vertical-align: middle;
+  color: #166534;
+  background: rgba(22, 163, 74, 0.14);
+  border: 1px solid rgba(22, 163, 74, 0.3);
+  border-radius: 999px;
+}
+.dark .free-pill {
+  color: #86efac;
+  background: rgba(22, 163, 74, 0.2);
+}
+
+/* ---------- Numbered step list ---------- */
+.step-list {
+  counter-reset: ak-step;
+  list-style: none;
+  padding: 0;
+  margin: 1.25rem 0;
+}
+.step-list > li {
+  counter-increment: ak-step;
+  position: relative;
+  padding: 0 0 0 2.6rem;
+  margin: 0 0 1rem;
+  line-height: 1.65;
+}
+.step-list > li::before {
+  content: counter(ak-step);
+  position: absolute;
+  left: 0;
+  top: 0.05rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, var(--ak-orange), var(--ak-orange-2));
+  border-radius: 50%;
+}
+
+/* ---------- Inline tip / warning blocks ---------- */
+.ui-tip,
+.ui-warn {
+  margin: 1.25rem 0;
+  padding: 0.85rem 1rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  border-left: 4px solid var(--ak-orange);
+  background: var(--vp-c-bg-soft);
+}
+.ui-warn {
+  border-left-color: #dc2626;
+}
+.ui-tip p:last-child,
+.ui-warn p:last-child {
+  margin-bottom: 0;
+}
+
+/* ---------- Pro callout ---------- */
+.pro-callout {
+  position: relative;
+  margin: 1.5rem 0;
+  padding: 1.1rem 1.25rem;
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.08), rgba(234, 88, 12, 0.05));
+  border: 1px solid rgba(249, 115, 22, 0.25);
+  border-left: 4px solid var(--ak-orange);
+  border-radius: 10px;
+}
+.dark .pro-callout {
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.16), rgba(234, 88, 12, 0.1));
+  border-color: rgba(249, 115, 22, 0.35);
+}
+.pro-callout__head {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+.pro-callout__badge {
+  display: inline-block;
+  padding: 0.15em 0.55em;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #fff;
+  background: linear-gradient(135deg, var(--ak-orange), var(--ak-orange-2));
+  border-radius: 999px;
+}
+.pro-callout__title {
+  font-weight: 700;
+  color: var(--vp-c-text-1);
+}
+.pro-callout__desc {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--vp-c-text-2);
+}
+.pro-callout__cta {
+  display: inline-block;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #fff !important;
+  background: var(--ak-orange);
+  border-radius: 8px;
+  text-decoration: none !important;
+}
+.pro-callout__cta:hover {
+  background: var(--ak-orange-2);
+}
+
+/* ---------- Card grid (home page, section indexes) ---------- */
+.ak-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0 2.5rem;
+}
+.ak-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.15rem 1.25rem;
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 12px;
+  text-decoration: none !important;
+  color: inherit !important;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.ak-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--ak-orange);
+  box-shadow: 0 8px 22px rgba(15, 15, 17, 0.07);
+}
+.ak-card__icon {
+  font-size: 1.5rem;
+  line-height: 1;
+  margin-bottom: 0.55rem;
+}
+.ak-card h3 {
+  margin: 0 0 0.35rem;
+  padding: 0;
+  border: 0;
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--vp-c-text-1);
+  letter-spacing: -0.01em;
+}
+.ak-card p {
+  flex: 1;
+  margin: 0 0 0.8rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--vp-c-text-2);
+}
+.ak-card__cta {
+  margin-top: auto;
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--vp-c-brand-1);
+}
+.ak-card:hover .ak-card__cta {
+  text-decoration: underline;
+}
+
+/* ---------- Add-on catalog grid ---------- */
+.ak-addon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 0.75rem;
+  margin: 1.25rem 0 2rem;
+}
+.ak-addon {
+  display: block;
+  padding: 0.85rem 1rem;
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 10px;
+  text-decoration: none !important;
+  color: inherit !important;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.ak-addon:hover {
+  border-color: var(--ak-orange);
+  background: var(--vp-c-bg);
+}
+.ak-addon strong {
+  display: block;
+  font-size: 0.95rem;
+  color: var(--vp-c-text-1);
+  margin-bottom: 0.15rem;
+}
+.ak-addon span {
+  display: block;
+  font-size: 0.83rem;
+  line-height: 1.45;
+  color: var(--vp-c-text-2);
+}
+
+/* ---------- Home hero ---------- */
+.ak-hero {
+  margin: 1rem 0 2.25rem;
+  padding: 2.25rem 1.9rem;
+  border-radius: 16px;
+  border: 1px solid var(--vp-c-divider);
+  background: radial-gradient(circle at 12% 0%, rgba(249, 115, 22, 0.16), transparent 55%),
+    radial-gradient(circle at 92% 90%, rgba(234, 88, 12, 0.14), transparent 55%),
+    linear-gradient(135deg, var(--vp-c-bg-soft), var(--vp-c-bg-alt));
+}
+.ak-hero__eyebrow {
+  display: inline-block;
+  margin-bottom: 0.8rem;
+  padding: 0.25rem 0.7rem;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--vp-c-brand-1);
+  background: var(--vp-c-brand-soft);
+  border-radius: 999px;
+}
+.ak-hero__title {
+  margin: 0 0 0.7rem;
+  padding: 0;
+  border: 0;
+  font-size: clamp(1.6rem, 3.4vw, 2.3rem);
+  line-height: 1.15;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--vp-c-text-1);
+}
+.ak-hero__lede {
+  max-width: 62ch;
+  margin: 0 0 1.35rem;
+  font-size: 1.04rem;
+  line-height: 1.6;
+  color: var(--vp-c-text-2);
+}
+.ak-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+.ak-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.6rem 1.1rem;
+  font-size: 0.94rem;
+  font-weight: 700;
+  border-radius: 8px;
+  text-decoration: none !important;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+.ak-btn--primary {
+  color: #fff !important;
+  background: var(--ak-orange);
+  box-shadow: 0 6px 18px rgba(249, 115, 22, 0.28);
+}
+.ak-btn--primary:hover {
+  background: var(--ak-orange-2);
+  transform: translateY(-1px);
+}
+.ak-btn--ghost {
+  color: var(--vp-c-text-1) !important;
+  border: 1px solid var(--vp-c-divider);
+}
+.ak-btn--ghost:hover {
+  border-color: var(--ak-orange);
+  background: var(--vp-c-bg-soft);
+}
+
+@media (max-width: 640px) {
+  .ak-hero {
+    padding: 1.6rem 1.2rem;
+  }
+  .screen-path {
+    white-space: normal;
+  }
+  .ak-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ---------- Print ---------- */
+@media print {
+  .ak-hero,
+  .pro-callout,
+  .ak-cards {
+    break-inside: avoid;
+  }
+}

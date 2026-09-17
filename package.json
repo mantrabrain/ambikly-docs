@@ -1,0 +1,35 @@
+{
+  "name": "ambikly-docs",
+  "version": "1.0.0",
+  "description": "Documentation for the Ambikly WordPress eCommerce plugin (free core + Ambikly Pro).",
+  "type": "module",
+  "scripts": {
+    "dev": "vitepress dev docs --port 5175",
+    "build": "node scripts/generate-addons.mjs && node scripts/generate-llms.mjs && vitepress build docs",
+    "preview": "vitepress preview docs --port 5175",
+    "serve": "vitepress preview docs --port 5175",
+    "addons": "node scripts/generate-addons.mjs",
+    "llms": "node scripts/generate-llms.mjs",
+    "check-links": "node scripts/check-links.mjs"
+  },
+  "dependencies": {
+    "medium-zoom": "^1.1.0",
+    "vitepress": "^1.6.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "ambikly",
+    "wordpress",
+    "ecommerce",
+    "documentation",
+    "vitepress"
+  ],
+  "author": "Ambikly",
+  "license": "GPL-3.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mantrabrain/ambikly-docs.git"
+  }
+}

@@ -1,0 +1,2350 @@
+{
+ "categories": {
+  "all": "All",
+  "marketing": "Marketing",
+  "store": "Store",
+  "checkout": "Checkout",
+  "physical": "Physical",
+  "digital": "Digital",
+  "customer": "Customer",
+  "admin": "Admin",
+  "ai": "AI",
+  "merchandising": "Merchandising"
+ },
+ "addons": [
+  {
+   "slug": "abandoned-cart",
+   "name": "Abandoned Cart Recovery",
+   "tagline": "Automatically emails shoppers who left items in their cart, with a one-click link back to it.",
+   "overview": "A 15-minute scan looks at the store's own carts table for carts with items, a captured email and no matching order since the cart went idle. Up to three reminder emails go out at offsets you set, each with a resume link that restores the cart and lands the shopper on the cart page. A read-only admin list shows which carts are currently abandoned, their subtotals and which reminders have already been sent.",
+   "features": [
+    "Recurring 15-minute scan over the core carts table — no separate abandoned-carts table",
+    "Three configurable reminder stages, with an optional coupon code in the third email",
+    "Resume link restores the cart and redirects to the cart page",
+    "Skips any cart whose email completed an order since the cart went idle",
+    "Per-episode send log, so a resumed-then-reabandoned cart gets a fresh sequence",
+    "Adds database indexes on activation so the scan stays fast at volume"
+   ],
+   "settings": [
+    "First reminder (minutes after abandonment)",
+    "Second reminder (minutes)",
+    "Third reminder (minutes)",
+    "Coupon to include in the third email (optional)"
+   ],
+   "storefront": [
+    "HTML reminder emails with cart line items and a “Resume your cart” button",
+    "Resume-cart link handler"
+   ],
+   "admin": [
+    "Abandoned carts list — email, item count, subtotal, reminders sent, last update"
+   ],
+   "rest_routes": [
+    "GET /ambikly-pro/v1/admin/abandoned-carts"
+   ],
+   "hooks_used": [
+    "ambikly_pro_abandoned_cart_scan",
+    "init",
+    "rest_api_init"
+   ],
+   "integrations": [],
+   "works_with": [
+    "dynamic-pricing",
+    "crm-sync"
+   ],
+   "faq": [
+    {
+     "q": "How does it know a cart was abandoned?",
+     "a": "A cart needs items, a customer email and no update for the configured number of minutes. If that email completed an order since the cart went idle, no reminder is sent."
+    },
+    {
+     "q": "Can a customer get the same reminder twice?",
+     "a": "No. Each send is logged against the cart’s last update; the same stage never resends for the same abandonment episode. Resuming and re-abandoning starts a new sequence."
+    },
+    {
+     "q": "Does it need a separate table?",
+     "a": "No. It reuses the core carts table and adds two indexes on activation for scan performance."
+    }
+   ],
+   "category": "marketing",
+   "categoryLabel": "Marketing",
+   "card": "Win back customers who left items in their cart with a sequence of automated emails."
+  },
+  {
+   "slug": "advanced-reports",
+   "name": "Advanced Reports",
+   "tagline": "Cohort retention, RFM segmentation, top customers and CSV exports from your order history.",
+   "overview": "Four read-only reports computed directly from your orders and customers — no new tables, no background jobs. Cohort groups customers by first-purchase month and shows net revenue per month since; RFM scores every customer on recency, frequency and monetary value and buckets them into named segments; Top Customers ranks by net spend; Export returns orders or customers for a date range.",
+   "features": [
+    "Cohort grid: first-purchase month vs revenue month, netting refunds",
+    "RFM segments: Champions, Loyal Customers, New Customers, At Risk, Hibernating, Promising",
+    "Configurable recency, frequency and monetary thresholds",
+    "Top-customers ranking by net spend (5–100 rows)",
+    "CSV export for orders or customers, up to 366 days and 5,000 rows per request",
+    "Readable by the Support Agent (read-only) role, not just admins"
+   ],
+   "settings": [
+    "Recency bucket days",
+    "Frequency bucket counts",
+    "Monetary bucket totals"
+   ],
+   "storefront": [],
+   "admin": [
+    "Cohort retention report",
+    "RFM segments report",
+    "Top customers report",
+    "Orders / customers export"
+   ],
+   "rest_routes": [
+    "GET /ambikly-pro/v1/reports/cohort",
+    "GET /ambikly-pro/v1/reports/rfm",
+    "GET /ambikly-pro/v1/reports/top-customers",
+    "GET /ambikly-pro/v1/reports/export"
+   ],
+   "hooks_used": [
+    "rest_api_init"
+   ],
+   "integrations": [],
+   "works_with": [
+    "multi-vendor",
+    "crm-sync"
+   ],
+   "faq": [
+    {
+     "q": "Which orders count toward these reports?",
+     "a": "Every order that is not cancelled or failed, with refunds netted out — the same convention the free plugin’s own Reports page uses."
+    },
+    {
+     "q": "Can I change the RFM thresholds?",
+     "a": "Yes. Recency days, frequency counts and monetary totals are each a comma-separated list in the add-on settings."
+    },
+    {
+     "q": "How large can an export be?",
+     "a": "Up to 5,000 rows, with the date span clamped to 366 days so a single response stays bounded."
+    }
+   ],
+   "category": "admin",
+   "categoryLabel": "Admin",
+   "card": "Cohort retention, RFM segmentation, top-customers, and CSV exports."
+  },
+  {
+   "slug": "advanced-shipping",
+   "name": "Advanced Shipping",
+   "tagline": "Conditional shipping rules driven by cart subtotal, weight, destination or contents.",
+   "overview": "A rule engine that plugs into the core shipping-rates filter: the first matching rule becomes the shipping line the customer sees. Rules are evaluated in priority order; if nothing matches and no other method exists, an optional flat fallback applies. Rules are created and deleted from the admin over REST with full validation.",
+   "features": [
+    "Conditions: cart subtotal min/max, cart weight min/max, destination countries, has product, has category",
+    "Results: free, flat, percentage of subtotal, or per item",
+    "Priority ordering with a stable tie-break; up to 200 active rules",
+    "Optional fallback flat rate when no rule matches",
+    "Rejects invalid ranges and unknown result types at save time",
+    "Result amount floored at zero — a rule can never produce negative shipping"
+   ],
+   "settings": [
+    "Fallback flat rate"
+   ],
+   "storefront": [
+    "Shipping method line at checkout, titled from the rule"
+   ],
+   "admin": [
+    "Shipping rules list, create, delete"
+   ],
+   "rest_routes": [
+    "GET /ambikly-pro/v1/shipping-rules",
+    "POST /ambikly-pro/v1/shipping-rules",
+    "DELETE /ambikly-pro/v1/shipping-rules"
+   ],
+   "hooks_used": [
+    "ambikly_shipping_rates",
+    "rest_api_init"
+   ],
+   "integrations": [],
+   "works_with": [
+    "shipment-tracking"
+   ],
+   "faq": [
+    {
+     "q": "What happens if two rules both match?",
+     "a": "First match wins, ordered by priority then by age, so ties resolve deterministically to the oldest rule."
+    },
+    {
+     "q": "Does it talk to carrier APIs for live rates?",
+     "a": "No. It is a rule engine evaluated against the cart; it is not a replacement for carrier-API integrations."
+    },
+    {
+     "q": "How is a category condition matched?",
+     "a": "Against the product’s category — Ambikly products carry one primary category."
+    }
+   ],
+   "category": "physical",
+   "categoryLabel": "Physical",
+   "card": "Conditional shipping rules driven by cart subtotal, weight, destination, or contents."
+  },
+  {
+   "slug": "advanced-variations",
+   "name": "Advanced Variations",
+   "tagline": "Renders product variation options as color chips, image thumbnails or text buttons.",
+   "overview": "Stores one swatch per attribute term in its own ambikly_attribute_swatches table, keyed on attribute slug and term slug, with a type of color, image or text and a value. GET /ambikly-pro/v1/variation-swatches returns the whole map publicly; POST upserts a row atomically and is limited to the manage-store capability. On product pages the script fetches the map once, and for each attribute select that has at least one configured swatch it builds a row of buttons: color chips, image tiles or text, with optional labels. The original select stays in the DOM, visually hidden, and receives the value and a change event, so the core variation logic keeps working unchanged.",
+   "features": [
+    "Three swatch types: color, image and text",
+    "One swatch per attribute term in a dedicated table",
+    "Atomic upsert so concurrent saves are never lost",
+    "Swatch type validated; image values URL-sanitized",
+    "Swatch size exposed as a CSS variable",
+    "Optional text labels under color and image swatches",
+    "Core select kept in the DOM for accessibility",
+    "Attributes without swatches keep their dropdown"
+   ],
+   "settings": [
+    "Swatch size in pixels (minimum 16, default 32)",
+    "Show text labels under swatches",
+    "Update product image on hover"
+   ],
+   "storefront": [
+    "Swatch rows replacing attribute dropdowns on variable product pages",
+    "Selected and disabled states on each swatch"
+   ],
+   "admin": [
+    "Swatch mapping saved per attribute term over the POST route"
+   ],
+   "rest_routes": [
+    "GET /ambikly-pro/v1/variation-swatches",
+    "POST /ambikly-pro/v1/variation-swatches"
+   ],
+   "hooks_used": [
+    "ambikly_product_variation_swatches",
+    "wp_enqueue_scripts",
+    "rest_api_init"
+   ],
+   "integrations": [],
+   "works_with": [
+    "size-chart",
+    "quick-view"
+   ],
+   "faq": [
+    {
+     "q": "What if I haven't configured a swatch for a term?",
+     "a": "If no term of an attribute has a swatch, that attribute keeps its normal dropdown. If some terms have swatches and others do not, the unconfigured terms render as plain text buttons alongside the color or image swatches, so nothing is missing from the picker."
+    },
+    {
+     "q": "Can two admins save the same swatch at once?",
+     "a": "Yes. Saves run as a single INSERT ... ON DUPLICATE KEY UPDATE against the unique attribute-plus-term key, so simultaneous writes from two tabs or an import script cannot race; the last write wins and the response reports a failure if the database rejects it."
+    },
+    {
+     "q": "Do swatches break variation selection or screen readers?",
+     "a": "No. The original select element remains in the page, visually hidden, and each swatch click sets its value and dispatches a change event. Core's variation resolution, price update and stock check listen to that select exactly as before the swatches were added."
+    },
+    {
+     "q": "Does choosing a swatch change the product image?",
+     "a": "Only if the option carries a data-swap-image attribute and the page has a gallery image the script can find. The core product template does not add that attribute today, so with default markup the setting has no visible effect; custom templates can supply it."
+    }
+   ],
+   "scenarios": [
+    {
+     "title": "Apparel with color options",
+     "body": "A T-shirt store maps each color term to a hex value once. Every variable product with a Color attribute then shows chips instead of a dropdown, and shoppers see the whole palette at a glance before choosing a size from the ordinary select."
+    },
+    {
+     "title": "Materials shown as photographs",
+     "body": "A furniture store sells sofas in fabrics that a name cannot convey. Image swatches show a photo of each fabric as a tile under the product, so the shopper picks by look rather than by reading 'Oatmeal Boucle' in a list of options."
+    },
+    {
+     "title": "Mixed attributes on one product",
+     "body": "A store's product has Color and Size attributes. Color terms carry swatches and become chips; Size has none configured and keeps the ordinary dropdown, so the page mixes both controls sensibly without any extra configuration per product."
+    }
+   ],
+   "category": "store",
+   "categoryLabel": "Store",
+   "card": "Color and image swatches for product variations."
+  },
+  {
+   "slug": "affiliate",
+   "name": "Affiliate System",
+   "tagline": "Tracks ?ref= referrals with a cookie window and records a commission on every qualifying order.",
+   "overview": "Captures a referral code from the URL into a cookie and a de-duplicated visit log, snapshots it onto the order at creation, and writes a pending commission when the order is paid. Affiliates get a shortcode dashboard with their link, visits, referred orders and pending versus paid balances; you mark commissions paid when you settle them.",
+   "features": [
+    "?ref=CODE capture with a configurable cookie window and visit log",
+    "Referral snapshotted at order creation, so gateway webhooks and offline payments still credit it",
+    "Commission on subtotal minus discount (not shipping or tax); rate clamped 0–100%",
+    "Self-referral blocked by matching the order email to the affiliate’s account",
+    "Reversed on cancel, failure or full refund; prorated on partial refunds",
+    "Minimum payout threshold before an affiliate can be paid",
+    "Per-affiliate status (active, suspended, rejected) and rate override"
+   ],
+   "settings": [
+    "Default commission rate (%)",
+    "Cookie window (days)",
+    "URL parameter name",
+    "Minimum payout"
+   ],
+   "storefront": [
+    "[ambikly_affiliate_dashboard] shortcode — link, rate, visits, orders, pending and paid totals"
+   ],
+   "admin": [
+    "Mark commissions paid",
+    "Update affiliate status or per-affiliate rate"
+   ],
+   "rest_routes": [
+    "GET /ambikly-pro/v1/affiliate/dashboard",
+    "POST /ambikly-pro/v1/affiliate/register",
+    "POST /ambikly-pro/v1/affiliate/mark-paid",
+    "POST /ambikly-pro/v1/affiliate/{id}"
+   ],
+   "hooks_used": [
+    "ambikly_order_created",
+    "ambikly_order_paid",
+    "ambikly_order_status_changed",
+    "ambikly_order_refunded",
+    "init",
+    "rest_api_init"
+   ],
+   "integrations": [],
+   "works_with": [
+    "multi-vendor",
+    "advanced-reports"
+   ],
+   "faq": [
+    {
+     "q": "Does it pay affiliates for me?",
+     "a": "No. It records what is owed and lets you mark commissions paid; the payout itself is settled outside Ambikly."
+    },
+    {
+     "q": "Do cash-on-delivery orders earn commission?",
+     "a": "Yes. For payment methods that can’t refund, commission settles when you move the order to processing or completed."
+    },
+    {
+     "q": "What happens on a partial refund?",
+     "a": "The pending commission is recomputed in proportion to the refunded amount."
+    }
+   ],
+   "category": "marketing",
+   "categoryLabel": "Marketing",
+   "card": "Track referrals and record commissions for affiliate partners."
+  },
+  {
+   "slug": "ai-descriptions",
+   "name": "AI Product Descriptions",
+   "tagline": "Generates a draft tagline and long description from a product name and a few feature bullets.",
+   "overview": "One admin action builds a prompt from the product name, optional bullets and a tone, then calls the Anthropic or OpenAI API with your own key. The result comes back as a short tagline and a long description for you to review — nothing is published automatically.",
+   "features": [
+    "Two providers: Anthropic (default model claude-sonnet-5) and OpenAI (default gpt-4o-mini)",
+    "Leave the model blank to use the provider default — switching providers just works",
+    "API key stored as a secret and masked in every settings response",
+    "Per-user rate limit of 20 generations per 10 minutes",
+    "Configurable default tone and long-description word cap",
+    "Provider errors surfaced with the provider’s own message"
+   ],
+   "settings": [
+    "Provider (Anthropic / OpenAI)",
+    "API key",
+    "Model",
+    "Default tone",
+    "Long description max words"
+   ],
+   "storefront": [],
+   "admin": [
+    "“Generate with AI” action in the product editor"
+   ],
+   "rest_routes": [
+    "POST /ambikly-pro/v1/ai/describe"
+   ],
+   "hooks_used": [
+    "rest_api_init"
+   ],
+   "integrations": [
+    "Anthropic Messages API",
+    "OpenAI Chat Completions API"
+   ],
+   "works_with": [
+    "ai-recommendations"
+   ],
+   "faq": [
+    {
+     "q": "Whose API key is used?",
+     "a": "Yours. The key is entered in add-on settings as a secret field and is masked whenever settings are read back."
+    },
+    {
+     "q": "Does it publish copy automatically?",
+     "a": "No. It returns a tagline and a long description as a draft for you to review and accept."
+    },
+    {
+     "q": "Is there a spend guard?",
+     "a": "Yes — each store manager is limited to 20 requests per 10 minutes; beyond that the request is refused without calling the provider."
+    }
+   ],
+   "category": "ai",
+   "categoryLabel": "AI",
+   "card": "Generate SEO-friendly product copy with Claude or GPT."
+  },
+  {
+   "slug": "ai-recommendations",
+   "name": "Frequently Bought Together",
+   "tagline": "“Customers who bought this also bought” companions from real purchase co-occurrence.",
+   "overview": "A scheduled job builds a pairs table from your own order history, keeps pairs above a minimum support and scores them by lift. Product pages render the top companions automatically, or you place them with a shortcode; a public REST route serves the same data. Rebuilds are non-blocking so the storefront never shows an empty gap.",
+   "features": [
+    "Rebuild on a custom N-day schedule with a rolling lookback window",
+    "Minimum-support threshold so one-off coincidences don’t surface",
+    "Score is overridable via the ambikly_recommendation_score filter",
+    "Companions filtered to published products that are in stock",
+    "Renders on product pages, via [ambikly_recommendations], and over REST",
+    "Manual rebuild action for store managers"
+   ],
+   "settings": [
+    "Number of recommendations",
+    "Minimum orders for co-occurrence",
+    "Rebuild every N days",
+    "Heading",
+    "Only consider orders from the last N days"
+   ],
+   "storefront": [
+    "[ambikly_recommendations] shortcode",
+    "Automatic block on product detail pages"
+   ],
+   "admin": [
+    "Rebuild recommendations action"
+   ],
+   "rest_routes": [
+    "GET /ambikly-pro/v1/recommendations",
+    "POST /ambikly-pro/v1/recommendations/rebuild"
+   ],
+   "hooks_used": [
+    "ambikly_pro_reco_rebuild",
+    "ambikly_product_detail_body",
+    "ambikly_recommendation_score",
+    "rest_api_init"
+   ],
+   "integrations": [],
+   "works_with": [
+    "bundles",
+    "product-badges"
+   ],
+   "faq": [
+    {
+     "q": "Does this use an AI model?",
+     "a": "No. It is a market-basket co-occurrence query over your real orders — not a language model. The score filter is the hook for swapping in embedding-based similarity later."
+    },
+    {
+     "q": "Will out-of-stock products be recommended?",
+     "a": "No. Only published, in-stock products are returned."
+    }
+   ],
+   "category": "merchandising",
+   "categoryLabel": "Merchandising",
+   "card": "&ldquo;Customers who bought this also bought&rdquo; recommendations, driven by real purchase co-occurrence — no AI model involved."
+  },
+  {
+   "slug": "ajax-filters",
+   "name": "AJAX Filters",
+   "tagline": "Sidebar facets that refresh the shop grid without a page reload.",
+   "overview": "The [ambikly_filters] shortcode renders an aside with published-category checkboxes, minimum and maximum price inputs, a sort selector (default, popularity, newest, price ascending and descending) and a Reset button. Any change is debounced for 250 ms and sent to GET /ambikly-pro/v1/filtered-products, which returns published products matching the selected category ids, price range and the term in the core shop search box, paginated at up to 60 per page. Popularity is computed from units sold on non-cancelled orders. The script replaces the contents of the element carrying data-ambikly-products-grid with cards that use the same markup as the server-rendered grid, discards stale responses, and shows an error message if a request fails.",
+   "features": [
+    "Category, price range and sort facets from one shortcode",
+    "Grid refreshes 250 ms after the last change",
+    "Popularity sort computed from real order history",
+    "Search term from the core shop box carried through",
+    "Only published categories offered and accepted",
+    "Per page capped at 60; pagination in the response",
+    "Cards use the storefront's own product-card markup",
+    "Stale responses ignored; error message on failure"
+   ],
+   "settings": [
+    "Whether the category checklist is shown",
+    "Whether the price range inputs are shown",
+    "Attribute filters toggle (no attribute facet is rendered in the current release)"
+   ],
+   "storefront": [
+    "[ambikly_filters] sidebar shortcode",
+    "Category checkboxes, Min and Max price inputs, Sort by selector",
+    "Reset filters button",
+    "Loading and error states on the product grid"
+   ],
+   "admin": [],
+   "rest_routes": [
+    "GET /ambikly-pro/v1/filtered-products"
+   ],
+   "hooks_used": [
+    "wp_enqueue_scripts",
+    "rest_api_init"
+   ],
+   "integrations": [],
+   "works_with": [
+    "smart-search",
+    "product-badges"
+   ],
+   "faq": [
+    {
+     "q": "Where do I put the filter widget?",
+     "a": "Drop [ambikly_filters] in a sidebar or column next to the shop grid. The script targets the first element with data-ambikly-products-grid or the ambikly-products-grid class, which the shop, search and archive shortcodes all render, and rewrites that grid in place."
+    },
+    {
+     "q": "Can I filter by attributes like size or color?",
+     "a": "Not in the current release. The settings panel includes an attribute filters toggle, but the shortcode renders only the category checklist, price range and sort selector. Products can be narrowed by category and price, and any search term typed into the shop box is preserved."
+    },
+    {
+     "q": "How is the Popularity sort calculated?",
+     "a": "The endpoint joins order items to orders whose status is not cancelled or failed, sums quantities per product in one pass, and sorts by that total. Products with no sales sort last. Newest uses the product's created date, and the two price options sort by regular price."
+    },
+    {
+     "q": "Does applying a filter drop the customer's search term?",
+     "a": "No. Before each request the script reads the value of the core shop search box and passes it as the search parameter, which matches name and SKU. A shopper who searched for 'lamp' and then ticks a category sees only lamps in that category."
+    }
+   ],
+   "scenarios": [
+    {
+     "title": "Home goods with broad categories",
+     "body": "A homeware store lists hundreds of products across kitchen, bath and decor. Shoppers tick two categories and set a price ceiling, and the grid updates in place while they adjust, so they refine the list rather than reloading the page after every change."
+    },
+    {
+     "title": "Budget-driven gift shopping",
+     "body": "A gift store's visitors often shop to a budget. Entering a maximum price narrows the grid immediately, and switching the sort to price low-to-high puts the most affordable items first, all without the shopper leaving the page or losing their category choices."
+    },
+    {
+     "title": "Refining a search result",
+     "body": "A shopper on a tool store searches for 'drill' using the core shop box, then ticks the Cordless category in the sidebar. The search term travels with the request, so the grid shows cordless drills rather than every cordless product in the catalog."
+    }
+   ],
+   "category": "store",
+   "categoryLabel": "Store",
+   "card": "Faceted filter widgets that refresh the shop grid without a reload."
+  },
+  {
+   "slug": "bundles",
+   "name": "Product Bundles",
+   "tagline": "Package several products under one SKU at a fixed or automatically computed price.",
+   "overview": "Turns any product into a bundle with a stored composition, recomputing the bundle price whenever the composition changes. The bundle sells as a single line, but real inventory is checked and decremented against each component, and the component list is snapshotted onto the order for warehouse and invoice use.",
+   "features": [
+    "Composition editor with atomic full-list replacement",
+    "Price computed from components, honoring per-line overrides",
+    "Component stock shortfalls surfaced at checkout",
+    "Component stock decremented atomically at order creation",
+    "Stock restored once on cancel or full refund from the order snapshot",
+    "Validation: no self-reference, no nested bundles"
+   ],
+   "settings": [
+    "Show the bundle contents on the product page"
+   ],
+   "storefront": [
+    "“What’s included” section on the product page"
+   ],
+   "admin": [
+    "Bundle composition editor per product"
+   ],
+   "rest_routes": [
+    "GET /ambikly-pro/v1/products/{id}/bundle-items",
+    "PUT /ambikly-pro/v1/products/{id}/bundle-items",
+    "POST /ambikly-pro/v1/products/{id}/bundle-items",
+    "DELETE /ambikly-pro/v1/products/{id}/bundle-items"
+   ],
+   "hooks_used": [
+    "ambikly_stock_shortfalls",
+    "ambikly_product_detail_body",
+    "ambikly_order_created",
+    "ambikly_order_status_changed",
+    "ambikly_order_refunded",
+    "rest_api_init"
+   ],
+   "integrations": [],
+   "works_with": [
+    "dynamic-pricing",
+    "ai-recommendations"
+   ],
+   "faq": [
+    {
+     "q": "Does a bundle sell out when one component does?",
+     "a": "Yes. Each component’s real stock is checked, so a bundle with a sold-out part reports the shortfall like any ordinary product."
+    },
+    {
+     "q": "Can I put a bundle inside a bundle?",
+     "a": "No — nested bundles are rejected on save."
+    },
+    {
+     "q": "What happens to a digital product turned into a bundle?",
+     "a": "Its original type is remembered and restored when the bundle is removed."
+    }
+   ],
+   "category": "merchandising",
+   "categoryLabel": "Merchandising",
+   "card": "Package multiple products under a single SKU at a fixed or computed price."
+  },
+  {
+   "slug": "checkout-field-editor",
+   "name": "Checkout Field Editor",
+   "tagline": "Define, relabel and reorder checkout fields as a schema — live checkout wiring lands in a coming release.",
+   "overview": "Stores a checkout field schema as JSON in the add-on settings. Each entry carries an id, section, label, type, required flag, position, optional options list, placeholder and a removed flag. GET and POST /ambikly-pro/v1/checkout-fields read and write the schema, gated on the view-store and manage-store capabilities, and every label, placeholder and option is sanitized before saving. The ambikly_checkout_fields filter merges entries over a default field list, relabelling, reordering by position, adding and removing fields, and ambikly_order_meta_keys registers custom ids. In the current release the core checkout does not apply either filter, so a saved schema has no visible effect on the live checkout until that wiring lands.",
+   "features": [
+    "JSON field schema stored in add-on settings",
+    "Read and write the schema over REST",
+    "Merge, relabel, reorder and remove default fields",
+    "Position-based ordering of the merged list",
+    "Custom field ids exposed through the order-meta filter",
+    "Labels, placeholders and options sanitized on save",
+    "Read needs view-store; write needs manage-store",
+    "Filters registered but not yet applied by the core checkout"
+   ],
+   "settings": [
+    "Field schema (JSON array of field entries)"
+   ],
+   "storefront": [],
+   "admin": [
+    "Field schema edited in the add-on settings panel or via POST /ambikly-pro/v1/checkout-fields"
+   ],
+   "rest_routes": [
+    "GET /ambikly-pro/v1/checkout-fields",
+    "POST /ambikly-pro/v1/checkout-fields"
+   ],
+   "hooks_used": [
+    "ambikly_checkout_fields",
+    "ambikly_order_meta_keys",
+    "rest_api_init"
+   ],
+   "integrations": [],
+   "works_with": [
+    "one-page-checkout"
+   ],
+   "faq": [
+    {
+     "q": "Will my field changes show on the live checkout today?",
+     "a": "Not yet. The core checkout form and validation do not call ambikly_checkout_fields or ambikly_order_meta_keys in the current release, so the schema is stored and available to code but nothing renders it. This page will be updated when the core wiring lands."
+    },
+    {
+     "q": "Who can edit the checkout field schema?",
+     "a": "Reading requires the ambikly_view_store capability and saving requires ambikly_manage_store, or manage_options for either. Because Store Managers can save, every label, placeholder and option is passed through sanitize_text_field and ids and types through sanitize_key."
+    },
+    {
+     "q": "What does a field entry look like?",
+     "a": "A JSON object with id, section (defaults to shipping), label, type (defaults to text), required, position (defaults to 99), an optional options array, placeholder and a removed flag. Entries with removed set to true delete the matching default field when the filter runs."
+    },
+    {
+     "q": "Can I add a completely new field, not just edit existing ones?",
+     "a": "In the schema, yes: an id that does not match a default field is appended with the values you supply, and its id is registered through the order-meta filter. Storing the submitted value against the order is not implemented in the current release."
+    }
+   ],
+   "scenarios": [
+    {
+     "title": "Preparing a B2B checkout",
+     "body": "A wholesale supplier plans to collect a company name and VAT number. It defines both fields in the schema now, with required flags and positions, so the moment the core checkout consumes the schema the fields appear without further configuration work."
+    },
+    {
+     "title": "Simplifying checkout for digital goods",
+     "body": "A store selling only downloads intends to drop the postal address fields. Marking them removed in the schema documents the intended checkout shape for its developers and for the future core renderer, in one place rather than scattered notes."
+    },
+    {
+     "title": "Developer integrations",
+     "body": "An agency building a custom checkout template reads the schema over GET /ambikly-pro/v1/checkout-fields and applies the ambikly_checkout_fields filter in its own code, using the add-on as the single source of truth for field definitions across environments."
+    }
+   ],
+   "category": "checkout",
+   "categoryLabel": "Checkout",
+   "card": "Define, relabel and reorder checkout fields as a schema — live checkout wiring lands in a coming release."
+  },
+  {
+   "slug": "compare",
+   "name": "Product Compare",
+   "tagline": "Adds a compare button to product cards and a side-by-side comparison table.",
+   "overview": "Adds an 'Add to Compare' button to shop-grid cards and the single product page through the ambikly_product_card_actions and ambikly_product_detail_actions filters. Clicking it toggles the product id in an ambikly_compare cookie that lasts seven days and holds at most your configured maximum; when the list is full the oldest id drops off. A floating tray lists the chosen products with remove buttons and a Compare button that activates at two items. That button calls GET /ambikly-pro/v1/compare, which returns published products with image, price, sale price, SKU, weight, dimensions and summary, rendered as a side-by-side table inside the [ambikly_compare] container or appended to the page.",
+   "features": [
+    "Compare button on grid cards and product pages",
+    "Selection kept in a seven-day cookie",
+    "Oldest item drops off when the list is full",
+    "Floating tray with per-product remove buttons",
+    "Compare button enabled once two products are chosen",
+    "Rows for image, name, price, sale price, SKU, weight, dimensions, summary",
+    "Dimensions composed from length, width and height",
+    "Only published products are returned"
+   ],
+   "settings": [
+    "Maximum products to compare (minimum 2, default 4)",
+    "Label on the trigger button and tray"
+   ],
+   "storefront": [
+    "Add to Compare button on cards and product pages",
+    "Floating compare tray",
+    "[ambikly_compare] table container",
+    "Side-by-side comparison table"
+   ],
+   "admin": [],
+   "rest_routes": [
+    "GET /ambikly-pro/v1/compare"
+   ],
+   "hooks_used": [
+    "ambikly_product_card_actions",
+    "ambikly_product_detail_actions",
+    "wp_enqueue_scripts",
+    "rest_api_init"
+   ],
+   "integrations": [],
+   "works_with": [
+    "quick-view",
+    "wishlist"
+   ],
+   "faq": [
+    {
+     "q": "How many products can shoppers compare at once?",
+     "a": "As many as your Max products setting allows, with a floor of two and a default of four. When a shopper adds one more than the maximum, the oldest selection is dropped rather than blocking the click, so the tray never fills up permanently."
+    },
+    {
+     "q": "Does the compare list survive a page refresh?",
+     "a": "Yes. Product ids are stored in an ambikly_compare cookie that expires after seven days, so the tray repaints with the same products on every page during that time. Nothing is written to the database for the selection itself."
+    },
+    {
+     "q": "Where does the comparison table appear?",
+     "a": "If the page contains the [ambikly_compare] shortcode, the table renders inside it and the page scrolls there. If not, the script appends a container to the end of the page so the table still appears. A dedicated compare page gives the cleanest result."
+    },
+    {
+     "q": "Which product fields are compared?",
+     "a": "Image, name, price, sale price, SKU, weight, dimensions and the short description. Dimensions are built from the product's length, width and height fields, so they display as, for example, 30 x 20 x 10. Unpublished products are excluded from the table."
+    }
+   ],
+   "scenarios": [
+    {
+     "title": "Electronics with close specifications",
+     "body": "A store selling headphones or routers has products that differ mainly in weight, size and a few summary lines. Shoppers pick two to four models from the grid and read them side by side instead of opening tabs, which shortens the path to a decision."
+    },
+    {
+     "title": "Furniture that must fit a space",
+     "body": "A furniture store's customers care about dimensions above all. The compare table lists length, width and height for each chosen piece in one row, so a shopper can check which desk or shelf fits the wall they have measured before adding it to the cart."
+    },
+    {
+     "title": "Sale-price shopping",
+     "body": "During a promotion a shopper on a kitchenware store collects several similar items and opens the table. Regular and sale prices sit in adjacent rows, making it obvious which product carries the bigger reduction without reading each product page in turn."
+    }
+   ],
+   "category": "store",
+   "categoryLabel": "Store",
+   "card": "Floating compare tray with a side-by-side product comparison table."
+  },
+  {
+   "slug": "crm-sync",
+   "name": "CRM Sync",
+   "tagline": "Pushes new customers, completed orders and captured leads to Mailchimp or HubSpot.",
+   "overview": "Listens for registrations, paid orders and popup leads, logs every event to an audit table and dispatches it through Ambikly’s durable job queue with exponential backoff. Mailchimp gets an audience-member upsert; HubSpot gets a contact upsert by email. A status endpoint reports sync counts by state.",
+   "features": [
+    "Three sync sources — customers, orders, popup leads — each independently toggleable",
+    "Every attempt logged with status, attempts and last error",
+    "Retries via the shared job queue: 5 attempts, 1m / 5m / 30m / 2h / 6h backoff",
+    "Order sync fires on both paid and checkout-completed, so offline-payment stores sync too",
+    "Mailchimp datacenter derived from the key; audience id validated",
+    "HubSpot upsert by email so returning customers update their record"
+   ],
+   "settings": [
+    "Provider (Mailchimp / HubSpot)",
+    "API key",
+    "Mailchimp audience ID",
+    "Mailchimp datacenter",
+    "Sync completed orders",
+    "Sync new customers",
+    "Sync popup-captured emails"
+   ],
+   "storefront": [],
+   "admin": [
+    "CRM sync status — counts by state"
+   ],
+   "rest_routes": [
+    "GET /ambikly-pro/v1/crm-sync/status"
+   ],
+   "hooks_used": [
+    "user_register",
+    "ambikly_order_paid",
+    "ambikly_checkout_completed",
+    "ambikly_popup_lead_captured",
+    "ambikly_job_crm_sync_dispatch",
+    "rest_api_init"
+   ],
+   "integrations": [
+    "Mailchimp Marketing API",
+    "HubSpot CRM API"
+   ],
+   "works_with": [
+    "popup-campaigns",
+    "subscriptions"
+   ],
+   "faq": [
+    {
+     "q": "What happens if the CRM is down?",
+     "a": "The audit row stays pending and the job queue retries with exponential backoff up to 5 attempts before marking it failed."
+    },
+    {
+     "q": "Is there inbound sync from the CRM?",
+     "a": "No — sync is one-way, from your store to the CRM."
+    },
+    {
+     "q": "Do I need to set the Mailchimp datacenter?",
+     "a": "Usually not; it is derived from the API key. The setting is a fallback for unusual key formats."
+    }
+   ],
+   "category": "admin",
+   "categoryLabel": "Admin",
+   "card": "Push customers, orders and popup leads to Mailchimp or HubSpot."
+  },
+  {
+   "slug": "download-analytics",
+   "name": "Download Analytics",
+   "tagline": "Logs every digital download and reports counts, unique customers and daily trends.",
+   "overview": "Listens to the core ambikly_download_served action and inserts a row into its own ambikly_download_log table for every file served: order, customer and product ids, file name, byte count, a SHA-256 hash of the IP salted with AUTH_SALT, a truncated user agent and a site-local timestamp. GET /ambikly-pro/v1/download-analytics, readable by anyone with the view-store capability, returns the top 100 files by download count with unique customers, plus a per-day series for the requested date range, defaulting to the last 30 days. A daily WP-Cron job deletes rows older than the retention setting, and uninstalling clears the schedule.",
+   "features": [
+    "Logs every download the core serves",
+    "Own ambikly_download_log table, indexed by product, customer and date",
+    "IP stored only as a salted SHA-256 hash",
+    "Per-file report: downloads and unique customers, top 100",
+    "Per-day series over any from/to range",
+    "Default range is the last 30 days",
+    "Daily prune to the retention window; 0 keeps forever",
+    "Report readable by view-store roles such as Support Agent"
+   ],
+   "settings": [
+    "Retention in days (default 365; 0 keeps rows forever)"
+   ],
+   "storefront": [],
+   "admin": [
+    "Download report endpoint with per-file table and daily series",
+    "from and to query parameters to set the date range"
+   ],
+   "rest_routes": [
+    "GET /ambikly-pro/v1/download-analytics"
+   ],
+   "hooks_used": [
+    "ambikly_download_served",
+    "ambikly_pro_download_log_prune",
+    "rest_api_init"
+   ],
+   "integrations": [],
+   "works_with": [
+    "pdf-stamping",
+    "license-pro"
+   ],
+   "faq": [
+    {
+     "q": "Does Download Analytics store personal data?",
+     "a": "Only ids that already exist in your orders table, the file name, a truncated user-agent string and a SHA-256 hash of the IP address salted with your site's AUTH_SALT. The raw IP is never written, so a log row cannot be traced back to an address."
+    },
+    {
+     "q": "How long is download history kept?",
+     "a": "For the number of days in the Retention setting, 365 by default. A WP-Cron event runs daily and deletes older rows. Setting retention to 0 disables pruning and keeps every row until you clear the table yourself."
+    },
+    {
+     "q": "Who can view the download report?",
+     "a": "Anyone with the ambikly_view_store capability or manage_options, which covers Administrators, Store Managers and the Support Agent role. The endpoint is read-only; nothing in the add-on lets a request modify or delete log rows."
+    },
+    {
+     "q": "Can I see which files are downloaded most?",
+     "a": "Yes. The report groups the log by product and file name, returning the download count and distinct customers for the top 100 files in the date range, sorted by downloads. A second series gives daily totals for charting trends."
+    }
+   ],
+   "scenarios": [
+    {
+     "title": "Course sellers checking engagement",
+     "body": "A store selling video courses as multiple downloadable files wants to know which lessons customers actually fetch. The per-file report shows counts and unique customers, revealing modules that are downloaded once and never revisited, which guides where to improve."
+    },
+    {
+     "title": "Spotting shared download links",
+     "body": "A stock-asset store notices one file with far more downloads than unique customers. That ratio in the report prompts a check of the order behind it, and pairs well with PDF Stamping so any copy that surfaces can be traced."
+    },
+    {
+     "title": "Planning bandwidth after a launch",
+     "body": "A store releasing a large software bundle watches the daily series in the weeks after launch. The curve shows when download traffic settles, informing hosting and CDN decisions with real numbers rather than guesses about demand."
+    }
+   ],
+   "category": "digital",
+   "categoryLabel": "Digital",
+   "card": "Per-file download metrics: counts, unique customers, timestamps."
+  },
+  {
+   "slug": "dynamic-pricing",
+   "name": "Dynamic Pricing",
+   "tagline": "Rule-based cart discounts — tiered, role-based, quantity, BOGO and scheduled.",
+   "overview": "A rule engine over the cart totals: active, in-window, under-limit rules are evaluated against the cart and appended as discount lines. Rules target everything, specific products, categories, tags or brands, and are either combinable or exclusive. Usage limits are enforced atomically at order creation.",
+   "features": [
+    "Discount types: percent, fixed amount, fixed price, and buy-X-get-Y",
+    "Conditions: subtotal range, minimum quantity, user roles, logged-in, exclude sale items",
+    "Targets: whole cart, products, categories, tags or brands, with exclusions",
+    "Exclusive rules take the largest discount; combinable rules keep the best per scope",
+    "Total discount capped so a cart can never go negative",
+    "Usage limit enforced atomically — a rule can’t be over-redeemed by concurrent checkouts",
+    "Respects Flash Sales windows when excluding sale items"
+   ],
+   "settings": [
+    "Apply discount against (cart / matching items)"
+   ],
+   "storefront": [
+    "Discount line in cart and checkout totals, labelled with the rule name"
+   ],
+   "admin": [
+    "Pricing rules list, create, edit, delete",
+    "Activate / deactivate a rule",
+    "Rule-builder metadata"
+   ],
+   "rest_routes": [
+    "GET /ambikly-pro/v1/pricing-rules",
+    "POST /ambikly-pro/v1/pricing-rules",
+    "GET /ambikly-pro/v1/pricing-rules/{id}",
+    "PUT /ambikly-pro/v1/pricing-rules/{id}",
+    "DELETE /ambikly-pro/v1/pricing-rules/{id}",
+    "POST /ambikly-pro/v1/pricing-rules/{id}/activate",
+    "POST /ambikly-pro/v1/pricing-rules/{id}/deactivate"
+   ],
+   "hooks_used": [
+    "ambikly_cart_totals",
+    "ambikly_order_created",
+    "rest_api_init"
+   ],
+   "integrations": [],
+   "works_with": [
+    "flash-sales",
+    "gift-cards",
+    "store-credit"
+   ],
+   "faq": [
+    {
+     "q": "How do stacked tier rules behave?",
+     "a": "Rules on the same target keep only the single best discount rather than summing; rules with different scopes still stack."
+    },
+    {
+     "q": "What does making a rule exclusive do?",
+     "a": "If an exclusive rule matches, no other rule applies; among several exclusive matches, the largest discount wins."
+    },
+    {
+     "q": "Can a usage limit be exceeded by concurrent checkouts?",
+     "a": "No. The increment is guarded by the limit; if it was exhausted in between, the order is stopped and the customer asked to review their cart."
+    }
+   ],
+   "category": "marketing",
+   "categoryLabel": "Marketing",
+   "card": "Rule-based discounts — tiered, role-based, cart-quantity, scheduled. Stacks or stays exclusive per rule."
+  },
+  {
+   "slug": "flash-sales",
+   "name": "Flash Sales",
+   "tagline": "Schedules a sale window per product and shows a live countdown until it ends.",
+   "overview": "Stores a start and end window per product and hooks the core on-sale check, so the schedule decides whether the sale price is honored at checkout — not just whether a banner shows. Countdowns render on product pages and shop-grid cards, plus a shortcode for landing pages. Times are entered in your site’s timezone.",
+   "features": [
+    "Per-product sale window in a dedicated table",
+    "Enforces the window on the real price, not just the banner",
+    "Countdowns on product pages and shop-grid cards, each toggleable",
+    "[ambikly_flash_sale] shortcode for landing pages",
+    "Urgency styling threshold in minutes",
+    "Site-timezone datetimes stored as UTC"
+   ],
+   "settings": [
+    "Label prefix",
+    "Show timer on product cards",
+    "Show timer on product pages",
+    "Urgency styling under N minutes"
+   ],
+   "storefront": [
+    "Countdown banner on product pages",
+    "Compact countdown on shop-grid cards",
+    "[ambikly_flash_sale] shortcode"
+   ],
+   "admin": [
+    "Flash sale schedules — list, create, delete"
+   ],
+   "rest_routes": [
+    "GET /ambikly-pro/v1/flash-sales",
+    "POST /ambikly-pro/v1/flash-sales",
+    "DELETE /ambikly-pro/v1/flash-sales"
+   ],
+   "hooks_used": [
+    "ambikly_product_on_sale",
+    "ambikly_product_detail_body",
+    "ambikly_product_card_actions",
+    "wp_enqueue_scripts",
+    "rest_api_init"
+   ],
+   "integrations": [],
+   "works_with": [
+    "product-badges",
+    "dynamic-pricing"
+   ],
+   "faq": [
+    {
+     "q": "Does the sale price actually stop when the timer runs out?",
+     "a": "Yes. Outside the window the sale price is not honored at checkout — the timer and the charged price can’t disagree."
+    },
+    {
+     "q": "Can I schedule a sale on a variable product?",
+     "a": "No — each variation prices independently, so the parent-level schedule is rejected on save."
+    },
+    {
+     "q": "Do I need a cron job?",
+     "a": "No. The countdown runs in the browser and the window check happens live on each price evaluation."
+    }
+   ],
+   "category": "marketing",
+   "categoryLabel": "Marketing",
+   "card": "Scheduled sale windows that enforce the sale price and show a live countdown on products and cards."
+  },
+  {
+   "slug": "gift-cards",
+   "name": "Gift Cards",
+   "tagline": "Sell stored-value gift cards and let customers redeem the balance at checkout.",
+   "overview": "Flag a product as a gift card and every paid unit mints a uniquely coded card, optionally emailed to a recipient. Buyers apply a code at checkout; the deduction happens atomically at order creation with a compare-and-swap loop so a card can never be overdrawn. Refunds credit balances back proportionally, and a refunded gift-card purchase voids the card it issued.",
+   "features": [
+    "Auto-issue on payment — one card per unit, with prefix, expiry and optional recipient email",
+    "Compare-and-swap redemption so concurrent redemptions can’t overdraw",
+    "Applies after merchandise discounts, redeeming against the real payable amount",
+    "Proportional credit-back on partial refunds; full restore on a never-completed order",
+    "A fully refunded purchase voids the card it issued",
+    "Admin bulk cancel and extend-expiry, each with a per-card activity ledger"
+   ],
+   "settings": [
+    "Code prefix",
+    "Default expiry (days, 0 = never)",
+    "Email recipient when a card is issued"
+   ],
+   "storefront": [
+    "Gift card redemption at checkout",
+    "“Gift cards” account tab — code, balance, expiry, status",
+    "Gift card issued email"
+   ],
+   "admin": [
+    "Gift cards list with status and search",
+    "Card detail with full activity ledger",
+    "Manual issue, balance adjust, cancel",
+    "Bulk cancel and bulk extend expiry"
+   ],
+   "rest_routes": [
+    "POST /ambikly-pro/v1/gift-cards/lookup",
+    "GET /ambikly-pro/v1/gift-cards",
+    "POST /ambikly-pro/v1/gift-cards",
+    "GET /ambikly-pro/v1/gift-cards/{id}",
+    "POST /ambikly-pro/v1/gift-cards/{id}/adjust",
+    "POST /ambikly-pro/v1/gift-cards/{id}/cancel",
+    "POST /ambikly-pro/v1/gift-cards/bulk",
+    "POST /ambikly-pro/v1/cart/gift-cards",
+    "DELETE /ambikly-pro/v1/cart/gift-cards/{code}"
+   ],
+   "hooks_used": [
+    "ambikly_order_paid",
+    "ambikly_order_created",
+    "ambikly_order_status_changed",
+    "ambikly_order_refunded",
+    "ambikly_cart_totals",
+    "ambikly_account_tabs",
+    "rest_api_init"
+   ],
+   "integrations": [],
+   "works_with": [
+    "store-credit",
+    "loyalty-points",
+    "dynamic-pricing"
+   ],
+   "faq": [
+    {
+     "q": "What if two people use the same code at once?",
+     "a": "Redemption only writes if the balance is still exactly what was read, retrying against the fresh value — a card can never be debited past its balance."
+    },
+    {
+     "q": "Do cash-on-delivery gift card purchases issue a code?",
+     "a": "Yes — for payment methods that can’t refund, the card is issued when you move the order to processing or completed."
+    },
+    {
+     "q": "What if I refund an order that bought a gift card?",
+     "a": "On a full refund, any still-active card that order issued is cancelled, so no live balance stays in circulation after the money goes back."
+    }
+   ],
+   "category": "marketing",
+   "categoryLabel": "Marketing",
+   "card": "Sell stored-value gift cards and let customers redeem them at checkout."
+  },
+  {
+   "slug": "license-pro",
+   "name": "Software Licensing Pro",
+   "tagline": "Activation API, per-site seat enforcement and a license-gated update feed for software you sell.",
+   "overview": "The runtime layer on top of the license keys the free core mints at purchase: activate, deactivate and check endpoints where the key is the credential, plus a per-product update feed gated on an active activation for the calling site. Seat counting is serialized with a database lock and site identity is normalized to the domain, so URL tricks can’t buy extra seats.",
+   "features": [
+    "Public activate / deactivate / check endpoints — the license key is the credential",
+    "Per-license lock around the seat check, so the limit can’t be raced past",
+    "Site identity normalized to host, so scheme and trailing slash don’t create extra seats",
+    "Update feed with version, download URL, changelog and WP/PHP requirements",
+    "Optional HMAC-SHA256 signature on every response",
+    "Configurable grace period after expiry",
+    "Admin revoke, reinstate, clear activations and bulk actions",
+    "Customer “Licenses” account tab with key, status, activations and expiry"
+   ],
+   "settings": [
+    "HMAC signing secret (optional)",
+    "Grace period after expiry (days)"
+   ],
+   "storefront": [
+    "“Licenses” account tab"
+   ],
+   "admin": [
+    "Licenses list with search and status filter",
+    "License detail with per-site activation history",
+    "Revoke / reinstate / clear activations",
+    "Bulk actions"
+   ],
+   "rest_routes": [
+    "POST /ambikly-pro/v1/licenses/activate",
+    "POST /ambikly-pro/v1/licenses/deactivate",
+    "POST /ambikly-pro/v1/licenses/check",
+    "GET /ambikly-pro/v1/updates/{slug}",
+    "GET /ambikly-pro/v1/admin/licenses",
+    "GET /ambikly-pro/v1/admin/licenses/{id}",
+    "POST /ambikly-pro/v1/admin/licenses/{id}/revoke",
+    "POST /ambikly-pro/v1/admin/licenses/{id}/reinstate",
+    "POST /ambikly-pro/v1/admin/licenses/{id}/clear-activations",
+    "POST /ambikly-pro/v1/admin/licenses/bulk"
+   ],
+   "hooks_used": [
+    "ambikly_account_tabs",
+    "rest_api_init"
+   ],
+   "integrations": [],
+   "works_with": [
+    "download-analytics",
+    "subscriptions"
+   ],
+   "faq": [
+    {
+     "q": "How are the public endpoints protected?",
+     "a": "The license key is the credential. Throttle them at your firewall or cache layer if abuse is a concern."
+    },
+    {
+     "q": "Can a customer activate the same site twice to use two seats?",
+     "a": "No. Site identity is derived from the normalized domain, so http vs https, a trailing slash or an extra path all resolve to one seat."
+    },
+    {
+     "q": "How are update downloads gated?",
+     "a": "The feed requires a valid, unexpired license, an active activation for the calling site, and a product slug that matches the license."
+    }
+   ],
+   "category": "digital",
+   "categoryLabel": "Digital",
+   "card": "Activation/deactivation API, per-site enforcement, and auto-updates for the digital products you sell."
+  },
+  {
+   "slug": "loyalty-points",
+   "name": "Loyalty Points",
+   "tagline": "Customers earn points on paid orders and redeem them as a cart discount.",
+   "overview": "An append-only ledger makes every credit and debit auditable, with balances derived by walking batches oldest-first so expiry only removes genuinely expired points. Points are awarded when an order is paid, and redemption is applied through cart totals and debited under a per-customer lock once payment lands. Refunds reverse both earning and redemption, once.",
+   "features": [
+    "Append-only ledger with oldest-first batch expiry",
+    "Earn rate per currency unit and redeem value per point",
+    "Minimum points to redeem and a maximum share of the order points may cover",
+    "Per-customer lock prevents double-spend across devices",
+    "Offline-payment orders earn and debit on status change",
+    "Refunds reverse earnings and credit redeemed points back, idempotently",
+    "Customer balance and history endpoints; manual adjustment for managers"
+   ],
+   "settings": [
+    "Points earned per currency unit",
+    "Currency value per point",
+    "Minimum points to redeem",
+    "Max % of order redeemable",
+    "Expire points after N days (0 = never)"
+   ],
+   "storefront": [
+    "[ambikly_loyalty_balance] shortcode",
+    "Loyalty redemption line in cart totals",
+    "Apply / remove points at checkout"
+   ],
+   "admin": [
+    "Manual points adjustment",
+    "Per-customer balance and history"
+   ],
+   "rest_routes": [
+    "POST /ambikly-pro/v1/cart/loyalty",
+    "DELETE /ambikly-pro/v1/cart/loyalty",
+    "GET /ambikly-pro/v1/loyalty/balance",
+    "GET /ambikly-pro/v1/loyalty/history",
+    "POST /ambikly-pro/v1/loyalty/adjust"
+   ],
+   "hooks_used": [
+    "ambikly_order_created",
+    "ambikly_order_paid",
+    "ambikly_order_status_changed",
+    "ambikly_order_refunded",
+    "ambikly_cart_totals",
+    "rest_api_init"
+   ],
+   "integrations": [],
+   "works_with": [
+    "store-credit",
+    "gift-cards"
+   ],
+   "faq": [
+    {
+     "q": "Do points expire?",
+     "a": "Optionally, after the number of days you set. Expiry is applied per earn batch, oldest first, so spending old points never wrongly expires newer ones."
+    },
+    {
+     "q": "Can a customer redeem the same points on two orders?",
+     "a": "No. The debit is re-validated against the live balance inside a per-customer lock."
+    },
+    {
+     "q": "How much of an order can points cover?",
+     "a": "Up to the maximum share you set (default 50%), and never more than the cart total."
+    }
+   ],
+   "category": "marketing",
+   "categoryLabel": "Marketing",
+   "card": "Earn-and-redeem loyalty program with a per-customer ledger and cart redemption."
+  },
+  {
+   "slug": "multi-vendor",
+   "name": "Multi-vendor",
+   "tagline": "Vendor signups, per-vendor dashboards and recorded earnings on every sale they make.",
+   "overview": "Vendors apply through a shortcode form, you approve, reject or suspend them, and each paid order writes one earnings row per vendor line — gross, platform commission and vendor net — with coupon discounts prorated. Vendors see their status, orders and pending versus paid earnings in a dashboard; you assign products, set per-vendor rates and mark earnings paid.",
+   "features": [
+    "Application and approval flow, with optional auto-approve and self-signup toggle",
+    "Per-vendor earnings rows: gross, platform commission, vendor net",
+    "Coupon discounts prorated so vendors aren’t paid on revenue never collected",
+    "Vendor share clamped 0–100%; self-purchase earnings blocked",
+    "Earnings reversed on cancel or full refund; recomputed on partial refunds",
+    "Mark-paid settles all of a vendor’s pending earnings",
+    "Payout details hidden from read-only staff"
+   ],
+   "settings": [
+    "Default vendor share of each sale (%)",
+    "Auto-approve vendor signups",
+    "Allow self-service signups"
+   ],
+   "storefront": [
+    "[ambikly_vendor_dashboard] shortcode",
+    "[ambikly_vendor_signup] shortcode"
+   ],
+   "admin": [
+    "Vendor list",
+    "Approve / reject / suspend",
+    "Per-vendor commission rate and payout details",
+    "Assign a product to a vendor",
+    "Mark pending earnings paid"
+   ],
+   "rest_routes": [
+    "GET /ambikly-pro/v1/vendors/me",
+    "POST /ambikly-pro/v1/vendors/signup",
+    "GET /ambikly-pro/v1/vendors",
+    "POST /ambikly-pro/v1/vendors/{id}/approve",
+    "POST /ambikly-pro/v1/vendors/{id}/reject",
+    "POST /ambikly-pro/v1/vendors/{id}/suspend",
+    "POST /ambikly-pro/v1/vendors/{id}",
+    "POST /ambikly-pro/v1/products/{id}/vendor",
+    "POST /ambikly-pro/v1/vendors/{id}/mark-paid"
+   ],
+   "hooks_used": [
+    "ambikly_order_paid",
+    "ambikly_order_status_changed",
+    "ambikly_order_refunded",
+    "ambikly_product_query_filters",
+    "rest_api_init"
+   ],
+   "integrations": [],
+   "works_with": [
+    "affiliate",
+    "advanced-reports"
+   ],
+   "faq": [
+    {
+     "q": "Is the commission setting the platform’s cut or the vendor’s?",
+     "a": "The vendor’s share — default 80%. The vendor keeps that share and the platform keeps the remainder."
+    },
+    {
+     "q": "Do cash-on-delivery orders credit vendors?",
+     "a": "Yes — earnings are recorded when you move the order to processing or completed."
+    },
+    {
+     "q": "Can a vendor set their own rate?",
+     "a": "No. The rate is manager-only; a vendor may edit only their payout method and details."
+    }
+   ],
+   "category": "physical",
+   "categoryLabel": "Physical",
+   "card": "Vendor onboarding, per-vendor dashboards, and commission on every sale."
+  },
+  {
+   "slug": "one-page-checkout",
+   "name": "One Page Checkout",
+   "tagline": "Combines cart, contact details, shipping and payment onto a single checkout page.",
+   "overview": "The [ambikly_one_page_checkout] shortcode renders an empty shell that a small script fills with the cart, contact details, shipping address, shipping methods, coupon field and payment method on one page. Every action calls the core ambikly/v1 routes: cart, cart/items, cart/coupons, cart/shipping, checkout/options, checkout/shipping and checkout. Changing the country, postcode or state re-quotes shipping, a single quoted method is selected automatically, and Place order is a real form submit so browser required-field checks run before any request is sent. Items that became unavailable are flagged and block submission until removed. Fewer steps means fewer places for a customer to drop out.",
+   "features": [
+    "Cart, address, shipping, coupon and payment on one page",
+    "Drives the core cart and checkout REST routes only",
+    "Shipping re-quoted when country, postcode or state changes",
+    "Single shipping method selected automatically",
+    "Quantity edits and item removal without leaving the page",
+    "Free-shipping coupons shown as struck-through shipping cost",
+    "Unavailable items flagged and block Place order",
+    "Gateway redirect honored, otherwise the thank-you page"
+   ],
+   "settings": [
+    "Layout (one column or two column)",
+    "Collect phone number",
+    "Show coupon field"
+   ],
+   "storefront": [
+    "[ambikly_one_page_checkout] shortcode",
+    "Inline cart with quantity inputs and Remove buttons",
+    "Shipping method radio list quoted from the entered address",
+    "Coupon field with Apply button",
+    "Payment method selector built from active gateways"
+   ],
+   "admin": [],
+   "rest_routes": [],
+   "hooks_used": [
+    "wp_enqueue_scripts"
+   ],
+   "integrations": [],
+   "works_with": [
+    "order-bumps",
+    "gift-cards",
+    "store-credit"
+   ],
+   "faq": [
+    {
+     "q": "Does One Page Checkout use its own checkout logic?",
+     "a": "No. It calls the same ambikly/v1 cart and checkout routes as the standard multi-step checkout, so coupons, shipping quotes, stock checks and payment gateways behave identically. Nothing is duplicated server-side; the add-on is a shortcode plus a script."
+    },
+    {
+     "q": "Does One Page Checkout work for digital-only carts?",
+     "a": "Yes. When the cart totals report that no shipping is required, the shipping method section is not rendered and no shipping address is sent with the order. The contact block, billing fields, coupon field and payment selector still appear."
+    },
+    {
+     "q": "What happens if the payment gateway needs a redirect?",
+     "a": "If the checkout response includes a payment redirect URL, the customer is sent there first. Otherwise they land on your configured thank-you page with the order id and thank-you key appended so the order summary can be displayed."
+    },
+    {
+     "q": "Can a customer order an item that was unpublished after adding it?",
+     "a": "No. Lines the cart service flags as unavailable are marked 'No longer available', their quantity input is disabled and the Place order button stays disabled until the customer removes them from the cart."
+    }
+   ],
+   "scenarios": [
+    {
+     "title": "Single-product launch pages",
+     "body": "A store selling one flagship product runs a landing page with the shortcode directly beneath the pitch. Visitors see the cart line, enter their address, pick a shipping method and pay without navigating to a separate cart and checkout, so the purchase happens on the page that convinced them."
+    },
+    {
+     "title": "Digital downloads with no shipping",
+     "body": "A store selling ebooks or presets has carts that never require shipping. The shipping-method block is skipped entirely, leaving email, billing details and payment on one short page, which suits impulse purchases of low-priced files where every extra step costs a sale."
+    },
+    {
+     "title": "Mobile-heavy stores",
+     "body": "A store whose traffic comes mostly from phones chooses the one-column layout so the cart, form and Place order button stack vertically. Native required-field checks flag empty fields immediately instead of after a round trip, which matters on slower mobile connections."
+    }
+   ],
+   "category": "checkout",
+   "categoryLabel": "Checkout",
+   "card": "Cart and checkout combined onto a single page for faster conversion."
+  },
+  {
+   "slug": "order-bumps",
+   "name": "Order Bumps",
+   "tagline": "One-click add-on offers on the checkout page to lift average order value.",
+   "overview": "Bump offers carry targeting conditions and an optional schedule; the eligible ones for the current cart are shown above the order summary. Accepting adds the product to the cart at a server-resolved price, so it flows through totals, tax, payment and fulfillment like any other line. Eligibility is re-checked at accept time.",
+   "features": [
+    "Discount types: percent off, fixed amount off, or a fixed bump price",
+    "Targeting by subtotal range and by product or category, with a schedule",
+    "Excludes bumps whose product is already in the cart; priority ordered",
+    "Price always resolved server-side — the client never supplies it",
+    "Eligibility re-validated at accept time",
+    "Configurable maximum bumps per checkout",
+    "Accept is idempotent; decline removes the line"
+   ],
+   "settings": [
+    "Maximum bumps to show per checkout"
+   ],
+   "storefront": [
+    "Bump offers above the checkout order summary"
+   ],
+   "admin": [
+    "Order bumps — list, create, edit, delete"
+   ],
+   "rest_routes": [
+    "GET /ambikly-pro/v1/order-bumps",
+    "POST /ambikly-pro/v1/order-bumps",
+    "GET /ambikly-pro/v1/order-bumps/{id}",
+    "PUT /ambikly-pro/v1/order-bumps/{id}",
+    "DELETE /ambikly-pro/v1/order-bumps/{id}",
+    "GET /ambikly-pro/v1/checkout/order-bumps",
+    "POST /ambikly-pro/v1/checkout/order-bumps/{id}/accept",
+    "DELETE /ambikly-pro/v1/checkout/order-bumps/{id}/decline"
+   ],
+   "hooks_used": [
+    "rest_api_init",
+    "wp_enqueue_scripts"
+   ],
+   "integrations": [],
+   "works_with": [
+    "one-page-checkout",
+    "post-purchase-upsells"
+   ],
+   "faq": [
+    {
+     "q": "Can a buyer tamper with the bump price?",
+     "a": "No. The accept endpoint refuses a client-supplied price and resolves it server-side from the bump record."
+    },
+    {
+     "q": "Is this a second checkout step?",
+     "a": "No. Accepting adds the product to the existing cart, so it flows through the same totals, tax and payment."
+    }
+   ],
+   "category": "marketing",
+   "categoryLabel": "Marketing",
+   "card": "Show one-click add-on offers on the checkout page. Boost AOV without a second step."
+  },
+  {
+   "slug": "pdf-stamping",
+   "name": "PDF Stamping",
+   "tagline": "Watermarks delivered PDFs with the buyer’s name and order number so leaks are traceable.",
+   "overview": "When ambikly_order_paid fires, the add-on finds every product file on the order whose URL resolves to a local PDF and writes a stamped copy into uploads/ambikly-pro/stamped under a random 64-character name, caching the order-and-file to stamped-URL mapping in a transient for seven days. The ambikly_download_file_url filter swaps the customer's download link for that copy, re-stamping on demand if the cache has expired, so the plain original is not served. With setasign FPDI via TCPDF installed, every page receives the watermark at the configured opacity and font size; otherwise a dependency-free fallback appends the note to a copy. Stamped files older than seven days are pruned.",
+   "features": [
+    "Stamps at payment; serves the stamped copy on download",
+    "Re-stamps on demand after the seven-day cache expires",
+    "Per-page watermark via FPDI with configurable opacity and size",
+    "Dependency-free fallback when no PDF library is installed",
+    "Template with {customer_name} and {order_id} placeholders",
+    "Customer name taken from the billing address",
+    "Stamped files named from 32 random bytes",
+    "Daily prune of stamped files older than seven days"
+   ],
+   "settings": [
+    "Watermark template with {customer_name} and {order_id}",
+    "Position (footer, header or both)",
+    "Opacity from 1 to 100 (default 35)",
+    "Font size in points (default 10)"
+   ],
+   "storefront": [
+    "Download links resolve to the stamped copy"
+   ],
+   "admin": [],
+   "rest_routes": [],
+   "hooks_used": [
+    "ambikly_order_paid",
+    "ambikly_download_file_url"
+   ],
+   "integrations": [
+    "setasign/FPDI via TCPDF (optional)"
+   ],
+   "works_with": [
+    "download-analytics"
+   ],
+   "faq": [
+    {
+     "q": "Do I need to install a PDF library for stamping to work?",
+     "a": "No. If the setasign FPDI class for TCPDF is autoloadable, each page is imported and the watermark drawn on it at your opacity and font size. Without it the add-on copies the file and appends a watermark comment, which keeps the file valid but is not visible on the page."
+    },
+    {
+     "q": "Is the original PDF modified?",
+     "a": "No. The source file is only read. A stamped copy is written to uploads/ambikly-pro/stamped with a random file name, and the download filter points the customer at that copy. Deleting stamped copies never affects your master file."
+    },
+    {
+     "q": "Do stamped files pile up on disk?",
+     "a": "No. Every stamp operation triggers a prune at most once a day that deletes stamped files older than seven days, matching the transient cache lifetime. If a customer downloads later, a fresh copy is stamped and cached for another seven days."
+    },
+    {
+     "q": "Whose name appears in the watermark?",
+     "a": "The first and last name from the order's billing address. If the billing address has no name, the customer's email is used, and 'Customer' as a last resort. The order id comes from the same order, so the default template reads 'Licensed to Jane Doe • Order #1234'."
+    }
+   ],
+   "scenarios": [
+    {
+     "title": "Ebook and report publishers",
+     "body": "An independent publisher sells PDF guides. Each paid order gets a copy stamped with the buyer's name and order number, so a file that turns up on a sharing site can be traced back to the order and the customer contacted about it."
+    },
+    {
+     "title": "Sheet music and sewing patterns",
+     "body": "A store selling patterns or scores licenses a single buyer per copy. The visible footer on every page acts as a reminder of that license and discourages casual forwarding, without blocking the legitimate printing the buyer paid for."
+    },
+    {
+     "title": "Training materials sold to teams",
+     "body": "A consultancy sells workbooks to companies. Stamping the purchaser's name and order id on each page makes it clear which client a copy belongs to, which is useful when the same material is licensed to several organizations at once."
+    }
+   ],
+   "category": "digital",
+   "categoryLabel": "Digital",
+   "card": "Watermark delivered PDFs with the buyer name and order number."
+  },
+  {
+   "slug": "popup-campaigns",
+   "name": "Popup Campaigns",
+   "tagline": "One email-capture popup with delay, scroll or exit-intent triggers and an optional coupon reveal.",
+   "overview": "A single configurable modal, driven by the trigger you choose and suppressed for a set number of days once seen. Submissions are nonce-checked and rate-limited per IP, stored in a leads table, and fire an event other add-ons can act on — CRM Sync forwards them to Mailchimp or HubSpot.",
+   "features": [
+    "Three triggers: time delay, scroll depth, exit intent",
+    "Frequency capping for N days after being seen",
+    "Coupon code revealed only after a genuine submission — never in page HTML",
+    "Nonce verification plus a per-IP limit of 10 submissions per 5 minutes",
+    "Emails de-duplicated",
+    "Fires ambikly_popup_lead_captured for downstream syncing",
+    "Editable heading, subheading, button label and success message"
+   ],
+   "settings": [
+    "Campaign active",
+    "Heading",
+    "Subheading",
+    "Button label",
+    "Success message",
+    "Reveal coupon code on success",
+    "Trigger (delay / scroll / exit)",
+    "Delay in seconds",
+    "Scroll threshold percent",
+    "Suppress for N days after seen"
+   ],
+   "storefront": [
+    "Popup modal with email capture form"
+   ],
+   "admin": [],
+   "rest_routes": [
+    "POST /ambikly-pro/v1/popup-leads"
+   ],
+   "hooks_used": [
+    "wp_footer",
+    "wp_enqueue_scripts",
+    "ambikly_popup_lead_captured",
+    "rest_api_init"
+   ],
+   "integrations": [],
+   "works_with": [
+    "crm-sync",
+    "dynamic-pricing"
+   ],
+   "faq": [
+    {
+     "q": "Can someone read the coupon code without signing up?",
+     "a": "No. It is returned only in the response to a real form submission."
+    },
+    {
+     "q": "Can the capture endpoint be spammed?",
+     "a": "It requires a valid nonce and is limited to 10 attempts per IP per 5 minutes."
+    },
+    {
+     "q": "Can I run several campaigns at once?",
+     "a": "No — this is deliberately the one banner, one goal version."
+    }
+   ],
+   "category": "marketing",
+   "categoryLabel": "Marketing",
+   "card": "Email capture or announcement popup with delay, scroll, and exit-intent triggers."
+  },
+  {
+   "slug": "post-purchase-upsells",
+   "name": "Post-purchase Upsells",
+   "tagline": "A one-click add-on offer on the thank-you page, charged to the card already on file.",
+   "overview": "When an order is paid, the first matching offer is cached with a single-use token and shown on the thank-you page to the verified order owner. Accepting re-validates everything live, charges the gateway for the difference with an idempotency key, appends the line item, decrements stock and records the transaction.",
+   "features": [
+    "Triggers: always, order-total minimum, or contains a category",
+    "Single-use accept token with a countdown",
+    "Viewer verified as the order owner before the token is rendered",
+    "Per-order lock plus a deterministic idempotency key — no double charges",
+    "Offer, product and price re-derived live at accept time",
+    "Decline invalidates the token immediately",
+    "Stock decremented atomically on accept"
+   ],
+   "settings": [
+    "Show upsells",
+    "Offer expires (minutes)",
+    "Offer heading",
+    "Offer subheading"
+   ],
+   "storefront": [
+    "[ambikly_upsell_offer] block on the thank-you page"
+   ],
+   "admin": [
+    "Upsell offers — product, discount, trigger, priority, enabled"
+   ],
+   "rest_routes": [
+    "POST /ambikly-pro/v1/upsell/accept",
+    "POST /ambikly-pro/v1/upsell/decline"
+   ],
+   "hooks_used": [
+    "ambikly_order_paid",
+    "ambikly_upsell_accepted",
+    "rest_api_init"
+   ],
+   "integrations": [
+    "Gateway additional charges (Stripe)"
+   ],
+   "works_with": [
+    "order-bumps"
+   ],
+   "faq": [
+    {
+     "q": "Does the customer re-enter payment details?",
+     "a": "No. The accept endpoint charges the order’s existing gateway for the difference and appends a line to the same order."
+    },
+    {
+     "q": "Can a double-click charge twice?",
+     "a": "No. The charge is serialized by a per-order lock and carries a deterministic idempotency key."
+    },
+    {
+     "q": "Can someone see another customer’s offer?",
+     "a": "No. The viewer is authorized with the same check the thank-you page uses."
+    }
+   ],
+   "category": "checkout",
+   "categoryLabel": "Checkout",
+   "card": "One-click upsell offer shown on the order confirmation page."
+  },
+  {
+   "slug": "product-badges",
+   "name": "Product Badges",
+   "tagline": "Adds Sale, New, Hot and Sold out ribbons to product cards from a simple rules engine.",
+   "overview": "Hooks the core ambikly_product_card_badges filter to append Sale, New, Hot and Sold out badges to the array the storefront renders on cards and product pages. Sale defers to the core on-sale check, which Flash Sales can gate; New compares the product's created date against your day count; Hot sums units sold in a rolling window and compares against your threshold; Sold out mirrors the core stock precedence. For markup the storefront does not render, such as the Product Grid block, a script collects data-ambikly-product-id elements without badges, calls GET /ambikly-pro/v1/badges?ids= once (capped at 200 ids and cached for five minutes) and paints the ribbons at your configured position.",
+   "features": [
+    "Four badges with individual toggles and labels",
+    "Sale badge follows core on-sale logic and Flash Sales windows",
+    "New based on days since the product was created",
+    "Hot based on units sold in a rolling window",
+    "Sold out mirrors core stock precedence",
+    "Public badges endpoint, cached five minutes, capped at 200 ids",
+    "JavaScript fallback for cards the server did not decorate",
+    "Results extensible through the ambikly_pro_product_badges filter"
+   ],
+   "settings": [
+    "Show Sale badge and its label",
+    "Show New badge, its label and the number of days",
+    "Show Hot badge, its label, the sold threshold and the window in days",
+    "Show Sold out badge and its label",
+    "Badge position (default top-left)"
+   ],
+   "storefront": [
+    "Ribbons on product cards in the shop, search and archive grids",
+    "Ribbons on product pages and related products",
+    "Fallback ribbons on block or theme cards carrying a product id"
+   ],
+   "admin": [],
+   "rest_routes": [
+    "GET /ambikly-pro/v1/badges"
+   ],
+   "hooks_used": [
+    "ambikly_product_card_badges",
+    "ambikly_pro_product_badges",
+    "wp_enqueue_scripts",
+    "rest_api_init"
+   ],
+   "integrations": [],
+   "works_with": [
+    "flash-sales",
+    "ajax-filters"
+   ],
+   "faq": [
+    {
+     "q": "What makes a product Hot?",
+     "a": "Units sold across orders in the last N days reaching your threshold, both configurable, with defaults of 50 units in 30 days. It is a current-trend signal rather than an all-time bestseller count, so a product that spiked years ago does not stay Hot forever. Hot is off by default."
+    },
+    {
+     "q": "Will badges work with my theme's own product cards?",
+     "a": "Yes, provided each card element carries data-ambikly-product-id. The script batches those ids into one request to the public badges endpoint and appends the ribbons, skipping any card that the server already decorated so nothing doubles up."
+    },
+    {
+     "q": "Why is there no Sale badge during a scheduled promotion?",
+     "a": "The Sale badge defers to the core on-sale check, which Flash Sales gates to its schedule. Outside the window the product is not on sale, so no badge appears even if a sale price is stored, and the badge is added only once when core already supplied it."
+    },
+    {
+     "q": "How does Sold out decide a product is unavailable?",
+     "a": "It follows core stock logic: when stock is managed, a quantity at or below zero means sold out; otherwise the stock status must be 'outofstock'. That keeps the ribbon consistent with whether the Add to cart button actually works on the product page."
+    }
+   ],
+   "scenarios": [
+    {
+     "title": "Frequent new arrivals",
+     "body": "A fashion store adds products weekly. With New set to 14 days, arrivals are labeled automatically and the badge disappears on its own, so nobody has to edit products to add or remove a 'new' tag as the range turns over."
+    },
+    {
+     "title": "Highlighting momentum",
+     "body": "A gadget store enables Hot with a threshold of 20 units in 7 days. Products that catch on after a review show the ribbon while the trend lasts, and it fades once sales slow, giving shoppers a live signal of what others are buying."
+    },
+    {
+     "title": "Managing expectations on stock",
+     "body": "A store with limited runs keeps sold-out products visible for search traffic. The Sold out ribbon on cards tells shoppers before they click, reducing frustration and matching the disabled Add to cart they would find on the product page."
+    }
+   ],
+   "category": "store",
+   "categoryLabel": "Store",
+   "card": "Show On Sale / New / Hot ribbons on product cards, driven by a rules engine."
+  },
+  {
+   "slug": "quick-view",
+   "name": "Quick View",
+   "tagline": "Opens a fast product preview modal from any shop page, with no page navigation.",
+   "overview": "Adds a Quick view button to every shop-grid card through the ambikly_product_card_actions filter. Clicking it opens a modal and fetches GET /ambikly-pro/v1/quick-view/{id}, a public route that returns a published product's name, image, price, sale price, descriptions, stock state and canonical URL. Simple in-stock products get an Add to cart button wired to the core cart handler; out-of-stock products show a disabled button; products with published variations get a Select options link to the full product page, where variation pricing and stock are resolved correctly. The modal closes on backdrop click, the close button or Escape, and nothing is written to the database.",
+   "features": [
+    "Quick view button on shop-grid cards",
+    "Dedicated public endpoint for published products",
+    "Shows image, name, price, sale price and description",
+    "Add to cart for simple in-stock products",
+    "Disabled button when the product is out of stock",
+    "Variable products link to the product page",
+    "Closes on backdrop click, close button or Escape",
+    "No settings, no database changes"
+   ],
+   "settings": [],
+   "storefront": [
+    "Quick view button on product cards",
+    "Preview modal with image, price and description",
+    "Add to cart, Out of stock or Select options action"
+   ],
+   "admin": [],
+   "rest_routes": [
+    "GET /ambikly-pro/v1/quick-view/{id}"
+   ],
+   "hooks_used": [
+    "ambikly_product_card_actions",
+    "wp_enqueue_scripts",
+    "rest_api_init"
+   ],
+   "integrations": [],
+   "works_with": [
+    "compare",
+    "wishlist"
+   ],
+   "faq": [
+    {
+     "q": "Does Quick View work with variable products?",
+     "a": "Partly. The modal shows the product's image, price and description, but instead of an Add to cart button it shows Select options linking to the product page. Adding a variable product without choosing a variation would charge the parent price, so the add-on avoids that."
+    },
+    {
+     "q": "Why does Quick View have its own REST endpoint?",
+     "a": "The core products route is restricted to store staff, so guests would receive a 401. This add-on registers a public GET /ambikly-pro/v1/quick-view/{id} route that returns only published products and only the fields the modal needs to render."
+    },
+    {
+     "q": "How does the modal decide a product is out of stock?",
+     "a": "It mirrors core stock logic: when stock is managed, the quantity must be above zero; otherwise the stock status must be 'instock'. Out-of-stock simple products show a disabled Out of stock button rather than letting the shopper add them to the cart."
+    },
+    {
+     "q": "Are there any Quick View settings to configure?",
+     "a": "No. Enable the add-on and the button appears on cards; the modal uses your store currency symbol for prices. The button and modal are plain HTML with class names you can restyle from your theme's stylesheet if the defaults do not suit."
+    }
+   ],
+   "scenarios": [
+    {
+     "title": "Fashion grids with many similar items",
+     "body": "A clothing store's category pages show dozens of tees. Shoppers open Quick view to read the description and price, then click Select options to pick a size on the product page, and their position in the grid is still there when they come back."
+    },
+    {
+     "title": "Simple consumables bought in bulk",
+     "body": "A store selling stationery or snacks has mostly simple products. Shoppers preview each item and add it to the cart from the modal, working through an entire category page without a single page load or losing the filters they applied."
+    },
+    {
+     "title": "Browsing a sale grid",
+     "body": "During a sale, shoppers on a homeware store scan a grid of discounted items. The modal shows the struck-through regular price beside the sale price and a working Add to cart, so the decision happens where the discount caught their eye."
+    }
+   ],
+   "category": "store",
+   "categoryLabel": "Store",
+   "card": "Open a fast product preview modal from any shop page — no page navigation."
+  },
+  {
+   "slug": "recently-viewed",
+   "name": "Recently Viewed",
+   "tagline": "Tracks and re-surfaces the products a visitor has already browsed.",
+   "overview": "A tracker script runs on every storefront page. On a product page it determines the current product id (passed from the server, or read from a meta tag or data attribute) and moves it to the front of an ambikly_recent cookie that lives 30 days and holds up to your maximum. The server reads that cookie at render time, loads the published products in viewing order, excludes the product being viewed, formats prices and outputs a grid, so the section works without JavaScript on the rendering page. Show it with [ambikly_recently_viewed], the ambikly_recently_viewed action, or automatically under product detail pages. Logging out deletes the cookie.",
+   "features": [
+    "History kept in a 30-day cookie, never on the server",
+    "Separate limits for remembering and displaying",
+    "Grid rendered server-side in viewing order",
+    "Current product excluded from its own page",
+    "Shortcode attributes for count, heading and columns (1 to 6)",
+    "Auto-append on product pages, or place with the action hook",
+    "Cookie cleared on logout for shared computers",
+    "Only published products with formatted prices are shown"
+   ],
+   "settings": [
+    "Maximum products to remember (default 12)",
+    "How many to display (default 6)",
+    "Auto-append on product pages",
+    "Section heading"
+   ],
+   "storefront": [
+    "[ambikly_recently_viewed] shortcode with count, heading and columns attributes",
+    "Automatic Recently viewed grid on product pages",
+    "do_action('ambikly_recently_viewed') for theme templates"
+   ],
+   "admin": [],
+   "rest_routes": [],
+   "hooks_used": [
+    "ambikly_recently_viewed",
+    "ambikly_product_detail_body",
+    "wp_logout",
+    "wp_enqueue_scripts"
+   ],
+   "integrations": [],
+   "works_with": [
+    "ai-recommendations"
+   ],
+   "faq": [
+    {
+     "q": "Is browsing history stored on the server?",
+     "a": "No. Product ids live in an ambikly_recent cookie in the shopper's browser, capped at your maximum and expiring after 30 days. The server only reads the cookie when rendering the grid and looks up those products; nothing is written to your database."
+    },
+    {
+     "q": "What happens on a shared or kiosk computer?",
+     "a": "The add-on hooks wp_logout and deletes the cookie when a customer signs out, so the next person does not inherit their history. Guests who never log in keep the cookie until it expires after 30 days or they clear it."
+    },
+    {
+     "q": "Can I control how many products are shown and in how many columns?",
+     "a": "Yes. The shortcode accepts count, heading and columns attributes, with columns clamped between 1 and 6, and the settings screen sets the defaults used by the automatic product-page section. Remembering and displaying have separate limits."
+    },
+    {
+     "q": "Does the current product show in its own Recently viewed list?",
+     "a": "No. When the server can identify the product being viewed from the URL, it removes that id before rendering, so the section only shows other products the shopper has visited, in the order they visited them."
+    }
+   ],
+   "scenarios": [
+    {
+     "title": "Comparison shoppers on fashion stores",
+     "body": "A clothing store's visitors open several dresses before deciding. On each product page the Recently viewed grid below the description brings back the previous options in order, letting them return to a favorite without using the back button repeatedly."
+    },
+    {
+     "title": "Returning visitors within a month",
+     "body": "A gift store's shoppers browse, leave and come back a week later. Because the cookie lasts 30 days, the shortcode on the homepage shows exactly what they looked at last time, picking up the session where it stopped."
+    },
+    {
+     "title": "Theme templates with custom layouts",
+     "body": "A store with a bespoke theme calls do_action('ambikly_recently_viewed') in its footer template. The server-rendered grid appears with the configured heading and column count, styled by the theme, without any extra JavaScript or template logic."
+    }
+   ],
+   "category": "store",
+   "categoryLabel": "Store",
+   "card": "Track and resurface products a visitor has browsed."
+  },
+  {
+   "slug": "shipment-tracking",
+   "name": "Shipment Tracking",
+   "tagline": "Adds tracking numbers to orders with carrier links and an automatic customer email.",
+   "overview": "One order can carry several tracking entries for partial shipments, with six pre-seeded carriers whose URL templates turn a number into a live link. Adding the first entry can flip the order to shipped and write an order note; every entry can email the customer. Shipments show on the admin order and the customer’s account.",
+   "features": [
+    "Multiple tracking entries per order",
+    "Six pre-seeded carriers — UPS, FedEx, USPS, DHL, Royal Mail, Australia Post — plus Other",
+    "Optional auto-mark-shipped on the first entry, with an audit note",
+    "Optional customer notification email",
+    "Duplicate entries return the existing row instead of re-emailing",
+    "Customers see only their own shipments",
+    "Deleting the last shipment reverts the fulfillment status"
+   ],
+   "settings": [
+    "Email customer when tracking is added",
+    "Mark order as shipped on first tracking entry"
+   ],
+   "storefront": [
+    "Shipments on the customer’s account order view",
+    "“Your order has shipped” email"
+   ],
+   "admin": [
+    "Shipments on the order detail screen",
+    "Add / delete tracking entries"
+   ],
+   "rest_routes": [
+    "GET /ambikly-pro/v1/shipments",
+    "POST /ambikly-pro/v1/shipments",
+    "DELETE /ambikly-pro/v1/shipments/{id}"
+   ],
+   "hooks_used": [
+    "ambikly_order_detail_extras",
+    "ambikly_account_order_extras",
+    "rest_api_init"
+   ],
+   "integrations": [
+    "Carrier tracking links (no API calls)"
+   ],
+   "works_with": [
+    "advanced-shipping"
+   ],
+   "faq": [
+    {
+     "q": "Does it call carrier APIs for live status?",
+     "a": "No. It stores the number and builds a link from a per-carrier URL template."
+    },
+    {
+     "q": "Can one order have several tracking numbers?",
+     "a": "Yes — designed for partial shipments. Only the first entry flips the order to shipped."
+    },
+    {
+     "q": "Can a customer see someone else’s tracking?",
+     "a": "No. Non-staff callers must own the order or the request is refused."
+    }
+   ],
+   "category": "physical",
+   "categoryLabel": "Physical",
+   "card": "Add tracking numbers to orders, with carrier links and customer notifications."
+  },
+  {
+   "slug": "size-chart",
+   "name": "Size Chart",
+   "tagline": "Shows a per-category size guide in a modal, triggered from the product page.",
+   "overview": "Charts are stored as a JSON array in the add-on settings; each has a name, an HTML table and an optional list of category ids. On a product page the ambikly_product_detail_body action renders a Size guide button when a chart matches the product's category, one of its parent categories (walked up to ten levels), or a chart with no categories acting as the store-wide default. Clicking it fetches GET /ambikly-pro/v1/size-chart?product_id=N, a public route returning the chart name and HTML filtered through a strict allow list of table and basic text tags, and opens a dialog that closes on Escape or backdrop click. The [ambikly_size_chart] shortcode renders the same table inline.",
+   "features": [
+    "Multiple charts, each assigned to category ids",
+    "Chart with no categories acts as the default",
+    "Parent-category inheritance up to ten levels",
+    "Size guide button rendered on matching product pages",
+    "Modal fetched once per product and cached client-side",
+    "Inline rendering with the [ambikly_size_chart] shortcode",
+    "HTML filtered to table and basic text tags only",
+    "Public endpoint returns charts for published products only"
+   ],
+   "settings": [
+    "Label on the trigger button (default Size guide)",
+    "Charts as JSON: name, category ids and table HTML"
+   ],
+   "storefront": [
+    "Size guide button on product pages",
+    "Size chart dialog with title and close button",
+    "[ambikly_size_chart product_id=\"N\"] inline table"
+   ],
+   "admin": [
+    "Charts and trigger label edited in the add-on settings panel"
+   ],
+   "rest_routes": [
+    "GET /ambikly-pro/v1/size-chart"
+   ],
+   "hooks_used": [
+    "ambikly_product_detail_body",
+    "wp_enqueue_scripts",
+    "rest_api_init"
+   ],
+   "integrations": [],
+   "works_with": [
+    "advanced-variations"
+   ],
+   "faq": [
+    {
+     "q": "Do I need a size chart for every category?",
+     "a": "No. A chart with an empty category list is the default and applies wherever no specific chart matches. A chart assigned to a parent category such as Clothing also covers products filed under child categories like Men's Shirts, because matching walks up the hierarchy."
+    },
+    {
+     "q": "Is merchant-authored HTML safe to show shoppers?",
+     "a": "The chart HTML passes through wp_kses with an allow list limited to table, thead, tbody, tfoot, tr, th, td, p, strong, em, br, ul, ol, li, small and span, so scripts and event handlers are stripped before the modal or shortcode outputs it."
+    },
+    {
+     "q": "Why doesn't the Size guide button appear on some products?",
+     "a": "The button only renders when a chart matches the product's category chain or a default chart exists, and only for published products. Check that the product has a category assigned and that the chart's category ids match the ids in your categories list."
+    },
+    {
+     "q": "Can I show the size table inline instead of in a modal?",
+     "a": "Yes. Place [ambikly_size_chart product_id=\"123\"] in page content and the matching chart's sanitized table renders directly in the page, using the same category matching as the button. Without a product_id attribute the shortcode outputs nothing."
+    }
+   ],
+   "scenarios": [
+    {
+     "title": "Clothing stores with brand-specific fits",
+     "body": "An apparel store sells several brands whose sizing differs. It creates one chart per brand category, assigns each by category id, and keeps a generic default. Shoppers on any product page see the chart that matches its brand without the store editing individual products."
+    },
+    {
+     "title": "Footwear with international conversions",
+     "body": "A shoe store publishes a UK, EU and US conversion table as a single default chart. Every product page gets the Size guide button, and shoppers unsure of their size open the dialog, check the row and pick a variation without leaving the page."
+    },
+    {
+     "title": "Kids' ranges under a parent category",
+     "body": "A store files products under Kids, then Boys, then Outerwear. A single chart assigned to Kids covers every nested subcategory because matching walks up the parent chain, so new subcategories added later inherit the guide automatically."
+    }
+   ],
+   "category": "store",
+   "categoryLabel": "Store",
+   "card": "Per-category size guide modal triggered from product detail pages."
+  },
+  {
+   "slug": "smart-search",
+   "name": "Smart Search",
+   "tagline": "Type-ahead product search with thumbnails, prices and matching category suggestions.",
+   "overview": "A type-ahead search box delivered by the [ambikly_smart_search] shortcode or by adding data-ambikly-smart-search to any input. Keystrokes are debounced for 180 ms and sent to GET /ambikly-pro/v1/smart-search, which matches the query against product name, SKU and short description, orders results by units sold on non-cancelled orders, and optionally returns up to five matching published categories. The panel shows thumbnails, names and formatted prices, supports arrow-key navigation, Enter and Escape, and carries combobox ARIA attributes. Links point at the real shop page, so the box works in a header or widget. The endpoint enforces the minimum character count and allows 60 requests per IP per minute.",
+   "features": [
+    "Results appear as the shopper types, debounced at 180 ms",
+    "Matches product name, SKU and short description",
+    "Ranked by units sold, newest product as tiebreaker",
+    "Up to five published category suggestions",
+    "Thumbnails and formatted prices in the results panel",
+    "Arrow keys, Enter and Escape with combobox ARIA",
+    "Minimum characters enforced server-side; 60 requests per IP per minute",
+    "Stale responses discarded so fast typing never shows old results"
+   ],
+   "settings": [
+    "Maximum number of results (default 8)",
+    "Minimum characters before a search runs (default 2)",
+    "Whether category suggestions are shown",
+    "Placeholder text in the box"
+   ],
+   "storefront": [
+    "[ambikly_smart_search] shortcode with optional placeholder attribute",
+    "Any input carrying data-ambikly-smart-search",
+    "Results panel with Categories and Products groups"
+   ],
+   "admin": [],
+   "rest_routes": [
+    "GET /ambikly-pro/v1/smart-search"
+   ],
+   "hooks_used": [
+    "wp_enqueue_scripts",
+    "rest_api_init"
+   ],
+   "integrations": [],
+   "works_with": [
+    "ajax-filters"
+   ],
+   "faq": [
+    {
+     "q": "Does Smart Search need a search index or external service?",
+     "a": "No. It runs a LIKE match over name, SKU and short description in the products table, with popularity computed from order history in the same query. That is fast enough for catalogs of roughly ten thousand products; no cron job or third-party API is involved."
+    },
+    {
+     "q": "How are search results ranked?",
+     "a": "By total units sold across orders that were not cancelled or failed, highest first, with the newest product id breaking ties. A product that sells often therefore appears above an older product with the same name match, and category suggestions are ordered shortest name first."
+    },
+    {
+     "q": "Can I put the search box in my header instead of the shop page?",
+     "a": "Yes. Result links are built from your configured shop page's permalink, not the current URL, so the box works in a header, footer or sidebar widget. Use the shortcode or add data-ambikly-smart-search to an existing input and the script wires it up."
+    },
+    {
+     "q": "Can someone hammer the search endpoint?",
+     "a": "The endpoint refuses queries shorter than your minimum character setting and returns a 429 response once an IP has made 60 requests within a minute. Genuine typing stays well under that limit because the client waits 180 ms after the last keystroke before requesting."
+    }
+   ],
+   "scenarios": [
+    {
+     "title": "Stores where customers search by SKU",
+     "body": "A parts or supplies store whose repeat buyers know product codes. Typing a partial SKU brings up the exact item with its thumbnail and price, letting a trade customer reorder in seconds without browsing categories or opening a product page first."
+    },
+    {
+     "title": "Large catalogs with deep categories",
+     "body": "A store with hundreds of categories turns category suggestions on. A shopper typing 'lamp' sees the Lamps category above individual products and can jump straight to the filtered grid, while the product list below still shows the best sellers that match."
+    },
+    {
+     "title": "Header search on a content-heavy site",
+     "body": "A store that also publishes buying guides adds the box to the site header. Because links resolve to the shop page, product results open correctly from a blog post, and a reader who learns about a product in an article can reach it in one step."
+    }
+   ],
+   "category": "store",
+   "categoryLabel": "Store",
+   "card": "Predictive search with live product results and matching category suggestions."
+  },
+  {
+   "slug": "social-login",
+   "name": "Social Login",
+   "tagline": "Single sign-on with Google and Facebook using the store’s own OAuth credentials.",
+   "overview": "Continue-with buttons on the WordPress login form, the store login form and via shortcode. The callback validates a browser-bound CSRF state, confirms the provider is enabled, exchanges the code server-to-server and requires a verified email from Google. It never attaches to an existing account — that email is sent to password login with a notice.",
+   "features": [
+    "Google OpenID Connect and Facebook flows",
+    "CSRF state bound to a per-browser cookie",
+    "Disabled providers rejected at callback, not just hidden",
+    "Google logins require a verified email",
+    "Never auto-attaches to a pre-existing account",
+    "Return-to-page honored after sign-in",
+    "Client secrets masked in every settings response"
+   ],
+   "settings": [
+    "Enable Google",
+    "Google client ID",
+    "Google client secret",
+    "Enable Facebook",
+    "Facebook app ID",
+    "Facebook app secret"
+   ],
+   "storefront": [
+    "Continue with Google / Facebook buttons",
+    "[ambikly_social_login_buttons] shortcode"
+   ],
+   "admin": [],
+   "rest_routes": [],
+   "hooks_used": [
+    "login_form",
+    "ambikly_login_form_after",
+    "init"
+   ],
+   "integrations": [
+    "Google OAuth 2.0 / OpenID Connect",
+    "Facebook Graph API"
+   ],
+   "works_with": [
+    "wishlist"
+   ],
+   "faq": [
+    {
+     "q": "What if I already have an account with that email?",
+     "a": "Social sign-in never attaches to an existing account; you are sent to the normal login with a notice to use your password."
+    },
+    {
+     "q": "Is Apple Sign In supported?",
+     "a": "No — it needs a signed client-secret JWT and its own review, so it was left out rather than shipped as a toggle that does nothing."
+    }
+   ],
+   "category": "customer",
+   "categoryLabel": "Customer",
+   "card": "Single sign-on with Google and Facebook."
+  },
+  {
+   "slug": "sticky-add-to-cart",
+   "name": "Sticky Add to Cart",
+   "tagline": "Pins the Add to Cart button to the screen once the real one scrolls out of view.",
+   "overview": "On the single-product route (?ambikly_product=slug) the add-on enqueues a small script and stylesheet and nothing else; there are no REST routes and no database writes. The script finds the page's real Add to cart button, reads the title and price from the page, and builds a bar fixed to the top or bottom of the viewport. An IntersectionObserver fades the bar in once the original button scrolls out of view, and a MutationObserver keeps the bar's price and disabled state matched to the page as variations change. Clicking the bar scrolls to and clicks the real button, so every existing cart hook still fires.",
+   "features": [
+    "Bar fixed to the top or bottom of the viewport",
+    "Appears only when the real button scrolls off-screen",
+    "Mobile-only mode for viewports up to 767 px",
+    "Optional live price mirrored from the page",
+    "Disabled state follows the real button",
+    "Click forwards to the original button, so cart hooks fire",
+    "Loads only on the single-product route",
+    "Uses the storefront's primary button styling"
+   ],
+   "settings": [
+    "Bar position (top or bottom)",
+    "Mobile only",
+    "Show price in the bar"
+   ],
+   "storefront": [
+    "Pinned Add to cart bar with product title and price on product pages"
+   ],
+   "admin": [],
+   "rest_routes": [],
+   "hooks_used": [
+    "ambikly_is_product_context",
+    "wp_enqueue_scripts"
+   ],
+   "integrations": [],
+   "works_with": [
+    "quick-view"
+   ],
+   "faq": [
+    {
+     "q": "Can I show the sticky bar only on phones?",
+     "a": "Yes. Turn on Mobile only and the script exits on viewports wider than 767 px, so desktop visitors see the normal page. The check uses a matchMedia query when the page loads, and no bar markup is added at all on wider screens."
+    },
+    {
+     "q": "Does the bar update when a shopper picks a different variation?",
+     "a": "Yes. A MutationObserver watches the page's price element and the real button's disabled attribute. When the variation picker changes the displayed price, or disables the button for an out-of-stock combination, the bar mirrors both immediately."
+    },
+    {
+     "q": "Will the sticky bar appear on my custom product template?",
+     "a": "By default it loads only when the URL carries ambikly_product. Return true from the ambikly_is_product_context filter to enqueue it elsewhere; the script still needs a button matching the storefront's add-to-cart selectors, otherwise it does nothing."
+    },
+    {
+     "q": "Does clicking the bar bypass any cart logic?",
+     "a": "No. The bar's button scrolls the original Add to cart button into view and triggers a click on it 200 ms later, so quantity, variation selection, stock validation and any analytics bound to that button behave exactly as if it had been clicked directly."
+    }
+   ],
+   "scenarios": [
+    {
+     "title": "Long-form product pages",
+     "body": "A skincare store writes detailed ingredient and usage sections below the fold. Once the shopper scrolls past the buy box, the bar keeps the price and Add to cart visible, so finishing the article does not mean scrolling back up to buy."
+    },
+    {
+     "title": "Mobile shoppers on variable products",
+     "body": "A footwear store enables Mobile only. A shopper picks a size, keeps reading reviews, and taps the bar at the bottom of the phone screen; the bar shows that size's price and grays out for sizes the page has marked sold out."
+    },
+    {
+     "title": "Stores with tall image galleries",
+     "body": "A furniture store's product pages open with several large photos. The bar appears as soon as the original button leaves the viewport, so a shopper who has decided from the images can buy without hunting for the button further down."
+    }
+   ],
+   "category": "store",
+   "categoryLabel": "Store",
+   "card": "Pin the Add to Cart button so customers can buy without scrolling back."
+  },
+  {
+   "slug": "store-credit",
+   "name": "Store Credit Wallet",
+   "tagline": "A per-customer wallet for refunds, gift credit and goodwill, spendable at checkout.",
+   "overview": "An append-only ledger per customer, with the balance as the running sum. Customers apply credit at checkout; the amount is snapshotted at order creation and debited under a per-customer lock once payment lands. Refunds on payment methods that can’t refund can be issued as credit instead.",
+   "features": [
+    "Append-only ledger — every grant and spend is auditable",
+    "Apply and clear credit at checkout",
+    "Per-customer lock before the debit is written",
+    "Offline-payment orders debit on status change",
+    "Refund-to-credit only for methods that can’t issue a real refund",
+    "Configurable minimum balance to apply",
+    "Manager adjustment endpoint"
+   ],
+   "settings": [
+    "Credit refunds to store credit for non-refundable payment methods",
+    "Minimum balance applied at checkout"
+   ],
+   "storefront": [
+    "[ambikly_store_credit_balance] shortcode",
+    "“Store credit applied” line in cart totals",
+    "Apply / remove credit at checkout"
+   ],
+   "admin": [
+    "Manual wallet adjustment",
+    "Balance lookup"
+   ],
+   "rest_routes": [
+    "POST /ambikly-pro/v1/cart/store-credit",
+    "DELETE /ambikly-pro/v1/cart/store-credit",
+    "GET /ambikly-pro/v1/store-credit",
+    "POST /ambikly-pro/v1/store-credit/adjust"
+   ],
+   "hooks_used": [
+    "ambikly_cart_totals",
+    "ambikly_order_created",
+    "ambikly_order_paid",
+    "ambikly_order_status_changed",
+    "ambikly_order_refunded",
+    "rest_api_init"
+   ],
+   "integrations": [],
+   "works_with": [
+    "loyalty-points",
+    "gift-cards"
+   ],
+   "faq": [
+    {
+     "q": "Will a refund pay the customer twice?",
+     "a": "No. Refund-to-credit only fires for payment methods that can’t refund, where crediting the wallet is the refund."
+    },
+    {
+     "q": "Can the same balance be spent on two orders at once?",
+     "a": "No. The debit is re-validated against the live balance inside a per-customer lock."
+    },
+    {
+     "q": "Where does credit come from?",
+     "a": "Manual adjustments, refunds on non-refundable methods, and any other add-on that writes a ledger row."
+    }
+   ],
+   "category": "customer",
+   "categoryLabel": "Customer",
+   "card": "Per-customer wallet for refunds, gift credit, and goodwill."
+  },
+  {
+   "slug": "subscriptions",
+   "name": "Subscriptions",
+   "tagline": "Recurring billing for memberships and subscription boxes, self-managed from the account page.",
+   "overview": "Any product with a billing period becomes a subscription: when the order is paid, a subscription is created per line with its period, interval, cycle limit, trial and next payment date. An hourly job claims due subscriptions atomically, creates a renewal order and charges through the gateway’s renewal method — Stripe today — with configurable retries. Customers cancel, pause and resume from their account.",
+   "features": [
+    "Hourly renewal job with an atomic claim — overlapping runs can’t double-charge",
+    "Automatic renewals through Stripe; other gateways are hidden when a cart contains a subscription",
+    "Configurable retry attempts, hours between retries, and cancel-after-failure",
+    "Renewal success and failure emails, each toggleable",
+    "Soft cancel (runs out the paid period), immediate cancel, pause and resume",
+    "Month and year advances clamped to the last valid day",
+    "Renewal orders tagged so they never spawn new subscriptions",
+    "Deleting a customer cancels their active subscriptions"
+   ],
+   "settings": [
+    "Failed-payment retry attempts",
+    "Hours between retries",
+    "Cancel after all retries fail",
+    "Email customer on successful renewal",
+    "Email customer on failed renewal"
+   ],
+   "storefront": [
+    "“Subscriptions” account tab — status, next payment, amount, cancel",
+    "Renewal succeeded and renewal failed emails"
+   ],
+   "admin": [
+    "Subscriptions list with status and customer filters",
+    "Subscription detail with renewal history",
+    "Force a renewal charge now"
+   ],
+   "rest_routes": [
+    "GET /ambikly-pro/v1/subscriptions",
+    "GET /ambikly-pro/v1/subscriptions/{id}",
+    "POST /ambikly-pro/v1/subscriptions/{id}/cancel",
+    "POST /ambikly-pro/v1/subscriptions/{id}/pause",
+    "POST /ambikly-pro/v1/subscriptions/{id}/resume",
+    "POST /ambikly-pro/v1/subscriptions/{id}/charge"
+   ],
+   "hooks_used": [
+    "ambikly_pro_subscriptions_tick",
+    "ambikly_order_paid",
+    "ambikly_customer_deleted",
+    "ambikly_account_tabs",
+    "rest_api_init"
+   ],
+   "integrations": [
+    "Stripe off-session charges"
+   ],
+   "works_with": [
+    "store-credit",
+    "license-pro",
+    "crm-sync"
+   ],
+   "faq": [
+    {
+     "q": "Who owns the renewal schedule?",
+     "a": "Ambikly does — the schedule is driven by the plugin’s own job, which keeps the add-on gateway-agnostic."
+    },
+    {
+     "q": "Which payment methods renew automatically?",
+     "a": "Stripe. PayPal and the offline methods leave renewals pending so you can invoice manually."
+    },
+    {
+     "q": "What does Cancel do for the customer?",
+     "a": "By default a soft cancel: access continues until the end of the paid period. Staff can cancel immediately."
+    }
+   ],
+   "category": "checkout",
+   "categoryLabel": "Checkout",
+   "card": "Recurring billing for memberships, SaaS, and subscription boxes. Customers self-manage from their account."
+  },
+  {
+   "slug": "wishlist",
+   "name": "Wishlist",
+   "tagline": "Lets shoppers save favorites — works for guests and merges into their account on login.",
+   "overview": "Adds a heart button to product cards and product pages through the card and detail action filters, backed by the core ambikly_wishlists and ambikly_wishlist_items tables. Three REST routes get, add and remove items; guests are identified by the core session key when guest wishlists are allowed, logged-in customers by user id. Read requests never create a wishlist row, adds check for an existing product or variation first, and on wp_login any guest list is merged into the account list without duplicates. A Wishlist tab joins the customer account page, and the [ambikly_wishlist] shortcode lists saved items with image, price and Add to cart, using a saved variation's own price.",
+   "features": [
+    "Heart button on product cards and product pages",
+    "GET, POST and DELETE routes under /ambikly-pro/v1/wishlist",
+    "Guest wishlists via the core session key, toggleable",
+    "Guest list merged into the account on login without duplicates",
+    "Duplicate-safe adds for products and variations",
+    "Read requests never create rows",
+    "Wishlist account tab and [ambikly_wishlist] shortcode",
+    "Saved variations show their own price and image"
+   ],
+   "settings": [
+    "Allow guest wishlists",
+    "Show count badge on the heart icon"
+   ],
+   "storefront": [
+    "Heart toggle on cards and product pages",
+    "[ambikly_wishlist] shortcode",
+    "Wishlist tab on the customer account page",
+    "Add to cart button on each saved item"
+   ],
+   "admin": [],
+   "rest_routes": [
+    "GET /ambikly-pro/v1/wishlist",
+    "POST /ambikly-pro/v1/wishlist/items",
+    "DELETE /ambikly-pro/v1/wishlist/items/{id}"
+   ],
+   "hooks_used": [
+    "ambikly_account_tabs",
+    "ambikly_account_tab_wishlist",
+    "ambikly_product_card_actions",
+    "ambikly_product_detail_actions",
+    "wp_login",
+    "wp_enqueue_scripts",
+    "rest_api_init"
+   ],
+   "integrations": [],
+   "works_with": [
+    "quick-view",
+    "compare"
+   ],
+   "faq": [
+    {
+     "q": "Does the wishlist work for guests?",
+     "a": "Yes, when Allow guest wishlists is on. Guests are identified by the core session key and their list persists for as long as that session cookie does. Turn the setting off and signed-out visitors receive a 401 with a login prompt when they try to save an item."
+    },
+    {
+     "q": "Do guests keep their wishlist after they sign up or log in?",
+     "a": "Yes. On wp_login the add-on looks up the guest wishlist for the current session. If the account has no list yet, the guest list is reassigned to the user; otherwise each guest item is moved across unless the account already has that product or variation."
+    },
+    {
+     "q": "Where do customers see their saved products?",
+     "a": "On the Wishlist tab of the customer account page, which renders the [ambikly_wishlist] shortcode. Each item shows image, name and current price with an Add to cart button, and the same shortcode can be placed on any other page you choose."
+    },
+    {
+     "q": "Can the same product be added to a wishlist twice?",
+     "a": "No. Before inserting, the add route checks for an existing row with the same product and variation, handling a missing variation correctly, so double clicks, network retries or two open tabs cannot create duplicate entries on the list."
+    }
+   ],
+   "scenarios": [
+    {
+     "title": "Gift shopping before the holidays",
+     "body": "A toy store's visitors browse weeks ahead and save candidates without creating an account. When they register at checkout time, the guest list moves into their new account automatically, so nothing they saved over those weeks is lost."
+    },
+    {
+     "title": "High-consideration purchases",
+     "body": "A furniture store's customers rarely buy on the first visit. The Wishlist tab in their account page keeps the sofas and tables they liked, each with a current price and Add to cart, making the return visit a short one."
+    },
+    {
+     "title": "Variation-specific favorites",
+     "body": "A store selling prints in several sizes saves the chosen variation with the product. The wishlist then shows that size's own price and image rather than the parent's, so the shopper sees exactly what they picked when they come back."
+    }
+   ],
+   "category": "store",
+   "categoryLabel": "Store",
+   "card": "Let shoppers save favorite products to a personal list — works for guests, persists once they log in."
+  }
+ ]
+}
